@@ -1,6 +1,3 @@
-This is my final project for the Automatic Music Generation. 
+This is my final project for Automatic Generation of Music class.
 
-This is under development. Feel free to use but use it at your own risk.
-
-Regards,
-soneca
+This is still under development.
