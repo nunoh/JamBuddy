@@ -1,0 +1,15 @@
+<config>
+       
+    <chords>
+	   <chord type="1" name="maj">0 4 7</chord>  
+	   <chord type="2" name="min">0 3 7</chord>
+	   <chord type="3" name="aug">0 4 8</chord>
+	   <chord type="4" name="dim">0 3 6</chord>
+	</chords>	
+	
+	<patterns>
+	    <pattern type="1" name="up and down">1234</pattern>
+	    <pattern type="2" name="down">3211</pattern>
+	</patterns>
+	
+</config>
