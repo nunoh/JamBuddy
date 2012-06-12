@@ -1,15 +1,35 @@
-<config>
+<root>
        
     <chords>
+    	
+    	<!-- basic 3 note chords -->            
 	   <chord type="1" name="maj">0 4 7</chord>  
 	   <chord type="2" name="min">0 3 7</chord>
 	   <chord type="3" name="aug">0 4 8</chord>
 	   <chord type="4" name="dim">0 3 6</chord>
-	</chords>	
+	   
+	   <!-- 7th chords -->
+	   <chord type="5" name="maj7">0 4 7 11</chord>
+	   <chord type="6" name="min7">0 3 7 10</chord>
+	   <chord type="7" name="aug7">0 4 8 11</chord>
+	   <chord type="8" name="dim7">0 3 6 9</chord>
+	   <chord type="9" name="dom7">0 4 7 10</chord>
+	   <chord type="10" name="hdim7">0 3 6 10</chord>
+	   
+	   <!-- sus chords -->
+	   <chord type="12" name="sus2">0 2 7</chord>
+	   <chord type="13" name="sus4">0 5 7</chord>
+	   
+	   <!-- other -->
+	   <chord type="16" name="5">0 7 12</chord>
+	   <chord type="17" name="7b13">0 4 7 11</chord>
+	   <chord type="18" name="713">0 4 7 11</chord>
+
+   	</chords>	
 	
 	<patterns>
-	    <pattern type="1" name="up and down">1234</pattern>
+	    <pattern type="1" name="up">1233</pattern>
 	    <pattern type="2" name="down">3211</pattern>
 	</patterns>
 	
-</config>
+</root>

@@ -2,9 +2,14 @@ package pt.hespanhol.nuno;
 
 
 public class Pattern {
-	int type;
-	String name;
-	String def;
+	
+	// constants
+	public static final char REST = '-';
+	
+	// variables
+	private int type;
+	private String name;
+	private String def;
 	
 	public Pattern(int type, String name, String def) {
 		this.type = type;

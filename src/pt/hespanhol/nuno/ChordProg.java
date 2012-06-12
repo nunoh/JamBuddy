@@ -27,14 +27,17 @@ public class ChordProg extends Chord {
 	}
 	
 	public int getPattern(int i) {
-		char c = this.pattern.def.charAt(i);
-		int ret = Integer.parseInt(""+c);
+		char c = this.pattern.getDef().charAt(i);
+		int ret;
+		if (c == Pattern.REST)
+			ret = -1;
+		else
+			ret = Integer.parseInt(""+c);
 		return ret;
 	}
 
 	public int getPatternSize() {
-		return this.pattern.def.length();
+		return this.pattern.getDef().length();
 	}
-	
-		
+			
 }

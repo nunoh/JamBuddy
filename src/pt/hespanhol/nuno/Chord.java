@@ -36,7 +36,7 @@ public class Chord implements Iterable<Note> {
 	
 	// eg new Chord("Cmin7");
 	public Chord(String chord) {
-		//TODO
+//		[CDEFGAB][##bb]
 	}
 		
 	private void buildChord(String def) {

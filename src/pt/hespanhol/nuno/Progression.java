@@ -1,14 +1,15 @@
 package pt.hespanhol.nuno;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import javax.sound.midi.Track;
 
 public class Progression {
-	ArrayList<ChordProg> chords;
-	int bpm;
+	
+	private ArrayList<ChordProg> chords;
+	private int bpm;
+	private int bar = 0; // the ongoin bar during generation
 	
 	public Progression() {
 		chords = new ArrayList<ChordProg>();
@@ -21,31 +22,22 @@ public class Progression {
 	public void addChord(Chord chord, int bars) {
 		chords.add(new ChordProg(chord, bars));
 	}
+	
+	public void addChord(Chord chord) {
+		chords.add(new ChordProg(chord, 1));
+	}
 
-	public void play() {
-		
-		for (int i = 0; i < chords.size(); i++) {
-		
+	public void generate(Track track) {		
+		for (int i = 0; i < chords.size(); i++) {		
 			// if first chord, then no voice leading, just play the first chord in root position
 			if (i == 0) {
-				System.out.println(chords.get(i));
-				playPattern(chords.get(i));
-			}
-			
+				playPattern(chords.get(i), track);
+			} 
 			else {
+//				System.out.println("inside else");
 				voiceLeading(chords.get(i-1), chords.get(i));
-				System.out.println(chords.get(i));
-				playPattern(chords.get(i));
+				playPattern(chords.get(i), track);
 			}
-			
-//			System.out.println(chord);
-			
-//			try {
-//				Thread.sleep(chords.get(i).getBars() * 1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-			
 			
 		}
 	}
@@ -118,22 +110,29 @@ public class Progression {
 		this.bpm = bpm;
 	}
 	
-	public void playPattern(ChordProg chord) {
+	public void playPattern(ChordProg chord, Track track) {
 		for (int i = 0; i < chord.getPatternSize(); i++) {
 			int iNote = chord.getPattern(i);
 			if (iNote > chord.getNumNotes()) {
 				System.err.println("not playing note, because it doesn't fit in chord.");
 				continue;
-			}			
-			System.out.println(chord.getNote(iNote-1));			
-			
-			//TODO
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}			
+			}
+			else if (iNote == -1) {
+				// is a rest, do nothing
+			}
+			else {
+				Note n = chord.getNote(iNote-1);
+				n.put(track, bar+1, i+1);
+			}
 		}
+		bar++;
+	}
+	
+	public String toString() {
+		String ret = "";
+		for (ChordProg chord : chords)
+			ret += chord + "\n";
+		return ret;
 	}
 
 }

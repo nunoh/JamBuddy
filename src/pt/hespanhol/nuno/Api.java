@@ -11,6 +11,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
+import javax.sound.midi.Track;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -21,11 +22,13 @@ import org.w3c.dom.NodeList;
 
 public class Api implements MetaEventListener {
 	
+	
 	// constants
-	private static final String PATH_XML_CONFIG = "src/config.xml";	
+	public static final String PATH_XML_CONFIG = "src/config.xml";	
 	public static final int DEFAULT_NOTE_VELOCITY = 80;
 	public static final int DEFAULT_MIDI_DEVICE = 2;
 	public static final int DEFAULT_PPQ_TICKS = 1;
+	public static final int DEFAULT_SEQUENCE_BPM = 60;
 	
 	// private variables
 	private static ArrayList<ChordDef> CHORDS;
@@ -34,8 +37,11 @@ public class Api implements MetaEventListener {
 	// public
 	public static MidiDevice midiDevice;
 	public static Receiver receiver;
-	public Sequencer sequencer;
-	public Sequence sequence;
+	public static Sequencer sequencer;
+	public static Sequence sequence;
+	public static Track track;
+	public Progression progression;
+	public int bpm;
 
 	public Api() {		
 		CHORDS = new ArrayList<ChordDef>();
@@ -45,11 +51,15 @@ public class Api implements MetaEventListener {
 			receiver = midiDevice.getReceiver();
 			sequencer = MidiSystem.getSequencer();
 			sequence = new Sequence(Sequence.PPQ, DEFAULT_PPQ_TICKS);
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
-			
-		sequencer.addMetaEventListener(this);
+		}
 		
+		sequencer.addMetaEventListener(this);
+		track = sequence.createTrack();
+		
+		bpm = DEFAULT_SEQUENCE_BPM;
 		
 //		loadXML();
 	}
@@ -182,6 +192,36 @@ public class Api implements MetaEventListener {
 		if (meta.getType() == 47) {
 			sequencer.close();
 		}
+	}
+		
+	public void setProgression(Progression prog) {
+		this.progression = prog;		
+	}
+	
+	public void playProgression() {
+		
+		if (progression == null) {
+			System.err.println("error: no progression to play");
+			return;
+		}
+		
+		Track track = sequence.createTrack();
+		this.progression.generate(track);
+		
+		try {
+			sequencer.open();
+			sequencer.setSequence(sequence);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+				
+		sequencer.setTempoInBPM(bpm);		
+		sequencer.start();
+	}
+
+	public void setBPM(int bpm) {
+		this.bpm = bpm;
 	}
 	
 }

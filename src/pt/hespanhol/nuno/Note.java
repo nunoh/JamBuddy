@@ -12,7 +12,7 @@ public class Note implements Comparable<Note> {
 	public static ToStringMode toStringMode = ToStringMode.PITCH;	
 	private int velocity;
 	private int pitch;
-	private int duration;
+	private int duration = 1;
 	
 	public Note(int pitch, int velocity) {
 		this.pitch = pitch;

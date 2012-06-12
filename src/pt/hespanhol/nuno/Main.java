@@ -1,6 +1,5 @@
 package pt.hespanhol.nuno;
 
-
 public class Main {
 	
 	public static void main(String[] args) throws Exception {
@@ -9,19 +8,20 @@ public class Main {
 		app.loadXML();
 		app.openMidiDevice();
 
-		Chord Cmaj = new Chord("C", "maj");
+		Chord Cmaj7 = new Chord("C", "maj7");
 		Chord Fmaj = new Chord("F", "maj"); 
 
 		Progression prog = new Progression();
-		prog.addChord(Cmaj, 4);
-		prog.addChord(Fmaj, 4);
-		prog.addChord(Cmaj, 4);
-		prog.setPattern(new Pattern("down"));
-
-		prog.play();
-
+		prog.addChord(Cmaj7);
+		prog.addChord(Fmaj);				
+		prog.setPattern(new Pattern("up"));	
+		app.setBPM(100);
+		
+		app.setProgression(prog);
+		app.playProgression();
+		
 		app.closeMidiDevice();
-
+		
 //		Sequence seq = new Sequence(Sequence.PPQ, 1);
 //		Track t = seq.createTrack();
 //
@@ -36,7 +36,7 @@ public class Main {
 //
 //		app.sequencer.open();
 //		app.sequencer.setSequence(seq);				
-//		app.sequencer.setTempoInBPM(180);		
+//		app.sequencer.setTempoInBPM(120);		
 //		app.sequencer.start();
 	}
 
