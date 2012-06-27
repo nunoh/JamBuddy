@@ -15,10 +15,21 @@ public class Main {
 
 		app = new Api();		
 		app.loadXML();
-		Song s = app.getSongs().get(0);
-		System.out.println(s.toString());
 		
-		System.out.println(app.getSongs().get(0).progression);
+		app.openMidiDevice();
+		
+		Song s = app.getSongs().get(0);
+		s.progression.setPattern(new Pattern("up"));
+		
+		app.openMidiDevice();
+		
+		
+		app.setBPM(100);
+		
+		app.setProgression(s.progression);
+		app.playProgression();
+		
+		app.closeMidiDevice();
 	}
 		
 	public void previousWork() {
@@ -30,7 +41,7 @@ public class Main {
 		Progression prog = new Progression();
 		prog.addChord(Cmaj7);
 		prog.addChord(Fmaj);				
-		prog.setPattern(new pt.hespanhol.nuno.Pattern("up"));	
+		prog.setPattern(new Pattern("up"));	
 		app.setBPM(100);
 		
 		app.setProgression(prog);
