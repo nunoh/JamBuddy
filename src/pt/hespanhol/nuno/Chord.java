@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 public class Chord implements Iterable<Note> {
 	
 	protected int type;
@@ -36,7 +39,39 @@ public class Chord implements Iterable<Note> {
 	
 	// eg new Chord("Cmin7");
 	public Chord(String chord) {
-//		[CDEFGAB][##bb]
+		this(parseChord(chord, "note"), parseChord(chord, "chord"));		
+	}
+	
+	private static String parseChord(String chord, String param) {
+		String notes = "^([CDEFGAB])";
+		String accidentals = "((?:#|##|b|bb)?)";
+		String chords = "(maj7|maj|min7|min|sus2)$"; // TODO add more chords
+		
+		String regex = notes + accidentals + chords; 
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(chord);		
+		
+		if (matcher.find()) {										
+			String letter = matcher.group(1);
+			String acci = matcher.group(2);
+			String note = letter + acci;
+			String chordDef = matcher.group(3);
+						
+			if (param.equals("note")) {
+				return note;
+			}
+			else if (param.equals("chord")) {
+				return chordDef;
+			}
+			else {
+				System.out.println("param argument is not valid");			
+			}
+		}
+		else {
+			System.out.println("invalid chord string");
+			return null;
+		}
+		return null;
 	}
 		
 	private void buildChord(String def) {
@@ -140,7 +175,5 @@ public class Chord implements Iterable<Note> {
 	public Note getNote(int i) {
 		return notes.get(i);
 	}
-	
-	
 	
 }

@@ -66,6 +66,7 @@ public class Note implements Comparable<Note> {
 		return ret;
 	}
 
+	// TODO refactoring so that the accidentals are relative and not absolute
 	public static int getMidiValue(String note) {
 		
 		int offset;

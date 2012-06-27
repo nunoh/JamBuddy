@@ -2,6 +2,8 @@ package pt.hespanhol.nuno;
 
 import junit.framework.TestCase;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Test extends TestCase {
 	
@@ -82,6 +84,6 @@ public class Test extends TestCase {
 		Cmaj.transpose(2);
 		assertEquals(Cmaj, Dmaj);		
 		assertEquals(Cmaj.equals(Emaj), false);
-	}
+	}	
 	
 }

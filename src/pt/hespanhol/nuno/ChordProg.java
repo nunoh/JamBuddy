@@ -1,5 +1,8 @@
 package pt.hespanhol.nuno;
 
+/*
+ * A chord inside a progression has both a number of bars and a pattern associated
+ */
 public class ChordProg extends Chord {
 	
 	private int bars;

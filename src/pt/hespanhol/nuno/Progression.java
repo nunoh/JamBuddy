@@ -5,6 +5,10 @@ import java.util.List;
 
 import javax.sound.midi.Track;
 
+/*
+ * A progression has many chordprogs (with a number of bars and pattern)
+ * and 
+ */
 public class Progression {
 	
 	private ArrayList<ChordProg> chords;
@@ -13,6 +17,26 @@ public class Progression {
 	
 	public Progression() {
 		chords = new ArrayList<ChordProg>();
+	}
+	
+	public Progression(String sProgression) {
+		
+		chords = new ArrayList<ChordProg>();
+		
+		String tokens[] = sProgression.split("\\" + Api.chordsDelimiter);
+		for (int i = 1; i < tokens.length; i++) {
+			String token = tokens[i].trim();
+			if (token.contains(" ")) {
+				String chords12[] = token.split(" ");
+				String chord1 = chords12[0];
+				String chord2 = chords12[1];
+				chords.add(new ChordProg(new Chord(chord1), 2));
+				chords.add(new ChordProg(new Chord(chord2), 2));
+			}
+			else { 
+				chords.add(new ChordProg(new Chord(token), 4));
+			}
+		}
 	}
 	
 	public Progression(ArrayList<ChordProg> chords) {
@@ -128,6 +152,7 @@ public class Progression {
 		bar++;
 	}
 	
+	@Override
 	public String toString() {
 		String ret = "";
 		for (ChordProg chord : chords)

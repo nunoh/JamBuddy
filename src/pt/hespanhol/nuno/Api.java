@@ -22,17 +22,18 @@ import org.w3c.dom.NodeList;
 
 public class Api implements MetaEventListener {
 	
-	
 	// constants
 	public static final String PATH_XML_CONFIG = "src/config.xml";	
 	public static final int DEFAULT_NOTE_VELOCITY = 80;
 	public static final int DEFAULT_MIDI_DEVICE = 2;
 	public static final int DEFAULT_PPQ_TICKS = 1;
 	public static final int DEFAULT_SEQUENCE_BPM = 60;
+	public static final String chordsDelimiter = "|";
 	
-	// private variables
-	private static ArrayList<ChordDef> CHORDS;
-	private static ArrayList<Pattern> PATTERNS;
+	// private
+	private static ArrayList<ChordDef> chords;
+	private static ArrayList<Pattern> patterns;
+	private static ArrayList<Song> songs;
 	
 	// public
 	public static MidiDevice midiDevice;
@@ -44,8 +45,9 @@ public class Api implements MetaEventListener {
 	public int bpm;
 
 	public Api() {		
-		CHORDS = new ArrayList<ChordDef>();
-		PATTERNS = new ArrayList<Pattern>();
+		chords = new ArrayList<ChordDef>();
+		patterns = new ArrayList<Pattern>();
+		songs = new ArrayList<Song>();
 		midiDevice = Utils.getMidiDevice(DEFAULT_MIDI_DEVICE);
 		try {			
 			receiver = midiDevice.getReceiver();
@@ -59,14 +61,13 @@ public class Api implements MetaEventListener {
 		sequencer.addMetaEventListener(this);
 		track = sequence.createTrack();
 		
-		bpm = DEFAULT_SEQUENCE_BPM;
-		
-//		loadXML();
+		bpm = DEFAULT_SEQUENCE_BPM;		
 	}
 
 	public void loadXML() {
 		try {			
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setIgnoringElementContentWhitespace(true);
 			DocumentBuilder db = dbf.newDocumentBuilder();			
 			Document dom = db.parse(PATH_XML_CONFIG);
 			dom.getDocumentElement().normalize();
@@ -74,16 +75,19 @@ public class Api implements MetaEventListener {
 			NodeList childs = dom.getDocumentElement().getChildNodes();
 			
 			// first level parsing to get chords and patterns element reference
-			NodeList chords = null;
-			NodeList patterns = null;
+			NodeList chordsNode = null;
+			NodeList patternsNode = null;
+			NodeList songsNode = null;
 			for (int i = 0; i < childs.getLength(); i++) {
 				Node node = childs.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element elem = (Element) node;
 					if (node.getNodeName().equals("chords"))
-						chords = elem.getElementsByTagName("chord");
+						chordsNode = elem.getElementsByTagName("chord");
 					else if (node.getNodeName().equals("patterns"))
-						patterns = elem.getElementsByTagName("pattern");
+						patternsNode = elem.getElementsByTagName("pattern");
+					else if (node.getNodeName().equals("songs"))
+						songsNode = elem.getElementsByTagName("song");
 					else {
 						System.err.println("error parsing XML file");
 						throw new Exception(node.getNodeName() + " is not valid");
@@ -92,21 +96,33 @@ public class Api implements MetaEventListener {
 			}
 			
 			// parsing chords
-			for (int i = 0; i < chords.getLength(); i++) {						
-				Element elem = (Element) chords.item(i);
+			for (int i = 0; i < chordsNode.getLength(); i++) {						
+				Element elem = (Element) chordsNode.item(i);
 				int type = Integer.parseInt(elem.getAttribute("type"));
 				String name = elem.getAttribute("name");
 				String def = elem.getTextContent();
-				CHORDS.add(new ChordDef(type, name, def));
+				chords.add(new ChordDef(type, name, def));
 			}
 			
 			// parsing patterns
-			for (int i = 0; i < patterns.getLength(); i++) {						
-				Element elem = (Element) patterns.item(i);
+			for (int i = 0; i < patternsNode.getLength(); i++) {						
+				Element elem = (Element) patternsNode.item(i);
 				int type = Integer.parseInt(elem.getAttribute("type"));
 				String name = elem.getAttribute("name");
 				String def = elem.getTextContent();
-				PATTERNS.add(new Pattern(type, name, def));
+				patterns.add(new Pattern(type, name, def));
+			}
+			
+			// parsing songs
+			for (int i = 0; i < songsNode.getLength(); i++) {
+				Element elem = (Element) songsNode.item(i);
+				int id = Integer.parseInt(elem.getAttribute("id"));
+				String name = elem.getAttribute("name");
+				String genre = elem.getAttribute("genre");
+				String measure = elem.getAttribute("measure");
+				String sProg = elem.getTextContent();
+				sProg = sProg.substring(sProg.indexOf(chordsDelimiter), sProg.lastIndexOf(chordsDelimiter)+1);
+				songs.add(new Song(id, name, genre, measure, sProg));
 			}
 			
 		}
@@ -117,38 +133,42 @@ public class Api implements MetaEventListener {
 	}
 	
 	public ArrayList<ChordDef> getChords() {
-		return CHORDS;
+		return chords;
 	}
 	
 	public ArrayList<Pattern> getPatterns() {
-		return PATTERNS;
+		return patterns;
+	}
+	
+	public ArrayList<Song> getSongs() {
+		return songs;
 	}
 	
 	public static ChordDef getChord(String name) {
-		for (int i = 0; i < CHORDS.size(); i++)
-			if (CHORDS.get(i).getName().equals(name))
-				return CHORDS.get(i);
+		for (int i = 0; i < chords.size(); i++)
+			if (chords.get(i).getName().equals(name))
+				return chords.get(i);
 		return null;
 	}
 
 	public static ChordDef getChord(int type) {
-		for (int i = 0; i < CHORDS.size(); i++)
-			if (CHORDS.get(i).getType() == type)
-				return CHORDS.get(i);
+		for (int i = 0; i < chords.size(); i++)
+			if (chords.get(i).getType() == type)
+				return chords.get(i);
 		return null;
 	}
 
 	public static int getChordType(String name) {
-		for (int i = 0; i < CHORDS.size(); i++)
-			if (CHORDS.get(i).getName().equals(name))
-				return CHORDS.get(i).getType();
+		for (int i = 0; i < chords.size(); i++)
+			if (chords.get(i).getName().equals(name))
+				return chords.get(i).getType();
 		return -1;
 	}
 	
 	public static String getChordName(int type) {
-		for (int i = 0; i < CHORDS.size(); i++)
-			if (CHORDS.get(i).getType() == type)
-				return CHORDS.get(i).getName();
+		for (int i = 0; i < chords.size(); i++)
+			if (chords.get(i).getType() == type)
+				return chords.get(i).getName();
 		return null;
 	}
 			
@@ -181,7 +201,7 @@ public class Api implements MetaEventListener {
 	}
 	
 	public static Pattern getPattern(String name) {
-		for (Pattern pattern : PATTERNS) {
+		for (Pattern pattern : patterns) {
 			if (pattern.getName().equals(name))
 				return pattern;
 		}
