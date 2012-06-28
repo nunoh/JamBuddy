@@ -1,4 +1,4 @@
-package pt.hespanhol.nuno;
+package pt.santos.nuno;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class Main {
 				markov.addFirst(current);
 			}
 			
-			else if (i == chords.size() - 1 {
+			else if (i == chords.size() - 1) {
 				markov.addLast(current);
 			}
 			else {

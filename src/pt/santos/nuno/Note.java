@@ -1,4 +1,4 @@
-package pt.hespanhol.nuno;
+package pt.santos.nuno;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;

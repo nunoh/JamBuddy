@@ -1,4 +1,4 @@
-package pt.hespanhol.nuno;
+package pt.santos.nuno;
 
 /*
  * A chord inside a progression has both a number of bars and a pattern associated

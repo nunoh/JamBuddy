@@ -1,4 +1,4 @@
-package pt.hespanhol.nuno;
+package pt.santos.nuno;
 
 public class ChordDef {
 	
