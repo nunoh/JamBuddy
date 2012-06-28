@@ -189,6 +189,10 @@ public class Note implements Comparable<Note> {
 		track.add(eventOn);
 		track.add(eventOff);
 	}
+
+	public int getFunction(int key) {
+		return (getPitchClass() + (12 - key)) % 12;
+	}
 	
 }
 

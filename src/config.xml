@@ -33,11 +33,8 @@
 	</patterns>
 	
 	<songs>
-	    <song id="1" name="Pimba em Dó" genre="Pimba" measure="4/4">
-			| Cmaj | Gmaj | Cmaj Gmaj | Cmaj |		
-        </song>
-        <song id="2" name="Pimba em Dó" genre="Pimba" measure="4/4">
-			| Cmaj | Gmaj | Cmaj | Gmaj | Cmaj | Fmaj | Cmaj | Gmaj | Cmaj Gmaj | Cmaj |		
+        <song id="2" name="Pimba em Dó" genre="Pimba" measure="4/4" key="D">
+			| Dmaj | Amaj | Dmaj | Amaj | Dmaj | Gmaj | Dmaj | Amaj | Dmaj Amaj | Dmaj |		
         </song>
 	</songs>
 	

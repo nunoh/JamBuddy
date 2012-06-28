@@ -43,6 +43,7 @@ public class Api implements MetaEventListener {
 	public static Track track;
 	public Progression progression;
 	public int bpm;
+	public static int key;
 
 	public Api() {		
 		chords = new ArrayList<ChordDef>();
@@ -61,7 +62,9 @@ public class Api implements MetaEventListener {
 		sequencer.addMetaEventListener(this);
 		track = sequence.createTrack();
 		
-		bpm = DEFAULT_SEQUENCE_BPM;		
+		bpm = DEFAULT_SEQUENCE_BPM;
+		
+		key = 0; // C
 	}
 
 	public void loadXML() {

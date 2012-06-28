@@ -175,5 +175,9 @@ public class Progression {
 			ret += chord + "\n";
 		return ret;
 	}
+	
+	public ArrayList<ChordProg> getChords() {
+		return chords;
+	}
 
 }

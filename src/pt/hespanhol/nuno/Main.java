@@ -1,5 +1,7 @@
 package pt.hespanhol.nuno;
 
+import java.util.ArrayList;
+
 import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
@@ -12,10 +14,39 @@ public class Main {
 	private static Api app;
 	
 	public static void main(String[] args) throws Exception {
-
+		
 		app = new Api();		
 		app.loadXML();
+		app.key = 2;
 		
+		Song s = app.getSongs().get(0);
+		
+		ArrayList<ChordProg> chords = s.progression.getChords();
+		
+		ChordNode previous, current;
+		MarkovModel markov;
+		for (int i = 0; i < chords.size(); i++) {			
+											
+			int function = chords.get(i).getNote(0).getFunction(app.key);
+			int type = chords.get(i).getType();			
+			current = new ChordNode(function, type);
+
+			if (i == 0) {
+				markov.addFirst(current);
+			}
+			
+			else if (i == chords.size() - 1 {
+				markov.addLast(current);
+			}
+			else {
+				markov.add(previous, current);
+			}
+			
+			previous = current;
+		}					
+	}
+	
+	public void progression() {
 		app.openMidiDevice();
 		
 		Song s = app.getSongs().get(0);
