@@ -34,6 +34,9 @@
 	
 	<songs>
 	    <song id="1" name="Pimba em Dó" genre="Pimba" measure="4/4">
+			| Cmaj | Gmaj | Cmaj Gmaj | Cmaj |		
+        </song>
+        <song id="2" name="Pimba em Dó" genre="Pimba" measure="4/4">
 			| Cmaj | Gmaj | Cmaj | Gmaj | Cmaj | Fmaj | Cmaj | Gmaj | Cmaj Gmaj | Cmaj |		
         </song>
 	</songs>

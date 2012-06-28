@@ -15,6 +15,8 @@ public class Progression {
 	private int bpm;
 	private int bar = 0; // the ongoin bar during generation
 	
+	private boolean sameBar = false;
+	
 	public Progression() {
 		chords = new ArrayList<ChordProg>();
 	}
@@ -58,7 +60,6 @@ public class Progression {
 				playPattern(chords.get(i), track);
 			} 
 			else {
-//				System.out.println("inside else");
 				voiceLeading(chords.get(i-1), chords.get(i));
 				playPattern(chords.get(i), track);
 			}
@@ -135,21 +136,36 @@ public class Progression {
 	}
 	
 	public void playPattern(ChordProg chord, Track track) {
+				
+		System.out.println(chord.getRoot() + " " + chord.getBeats());
+				
 		for (int i = 0; i < chord.getPatternSize(); i++) {
 			int iNote = chord.getPattern(i);
 			if (iNote > chord.getNumNotes()) {
 				System.err.println("not playing note, because it doesn't fit in chord.");
 				continue;
 			}
+			
+			else if (i+1 > chord.getBeats()) {
+				System.err.println("not playing note, because it doesn't fit in bar.");
+				if (sameBar) { sameBar = false; bar++; }
+				else sameBar = true;
+				return;
+			}
 			else if (iNote == -1) {
 				// is a rest, do nothing
 			}
 			else {
-				Note n = chord.getNote(iNote-1);
-				n.put(track, bar+1, i+1);
+				Note n = chord.getNote(iNote-1);				
+				if (!sameBar) {
+					n.put(track, bar+1, i+1);
+				}
+				else { 
+					n.put(track, bar+1, i+1+2);
+				}
 			}
 		}
-		bar++;
+		if (!sameBar) bar++;
 	}
 	
 	@Override

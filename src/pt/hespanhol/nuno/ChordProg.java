@@ -13,7 +13,7 @@ public class ChordProg extends Chord {
 		this.bars = bars;
 	}
 	
-	public int getBars() {
+	public int getBeats() {
 		return this.bars;
 	}
 		

@@ -174,6 +174,5 @@ public class Chord implements Iterable<Note> {
 	
 	public Note getNote(int i) {
 		return notes.get(i);
-	}
-	
+	}	
 }
