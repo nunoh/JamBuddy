@@ -1,6 +1,7 @@
 package pt.santos.nuno;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.sound.midi.Track;
@@ -9,7 +10,7 @@ import javax.sound.midi.Track;
  * A progression has many chordprogs (with a number of bars and pattern)
  * and 
  */
-public class Progression {
+public class Progression implements Iterable<ChordProg> {
 	
 	private ArrayList<ChordProg> chords;
 	private int bpm;
@@ -180,4 +181,8 @@ public class Progression {
 		return chords;
 	}
 
+	public Iterator<ChordProg> iterator() {
+		return chords.iterator();
+	}
+		
 }

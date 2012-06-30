@@ -43,6 +43,7 @@ public class Api implements MetaEventListener {
 	public static Track track;
 	public Progression progression;
 	public int bpm;
+	public Markov markov;
 	public static int key;
 
 	public Api() {		
@@ -64,7 +65,9 @@ public class Api implements MetaEventListener {
 		
 		bpm = DEFAULT_SEQUENCE_BPM;
 		
-		key = 0; // C
+		key = 2; // C
+		
+		markov = new Markov(1);
 	}
 
 	public void loadXML() {
@@ -123,9 +126,10 @@ public class Api implements MetaEventListener {
 				String name = elem.getAttribute("name");
 				String genre = elem.getAttribute("genre");
 				String measure = elem.getAttribute("measure");
+				String key = elem.getAttribute("key");
 				String sProg = elem.getTextContent();
 				sProg = sProg.substring(sProg.indexOf(chordsDelimiter), sProg.lastIndexOf(chordsDelimiter)+1);
-				songs.add(new Song(id, name, genre, measure, sProg));
+				songs.add(new Song(id, name, genre, measure, key, sProg));
 			}
 			
 		}
@@ -246,5 +250,17 @@ public class Api implements MetaEventListener {
 	public void setBPM(int bpm) {
 		this.bpm = bpm;
 	}
+
+	public void loadSongs() {				
+		for (Song song : songs) {										
+			for (ChordProg chord : song.progression) {
+				int function = chord.getNote(0).getFunction(song.getKey());
+				int type = chord.getType();			
+				String sNode = "(" + function + "," + type + ")";			
+				markov.add(sNode);
+			}
+		}
+	}
+	
 	
 }

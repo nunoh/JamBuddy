@@ -1,6 +1,8 @@
 package pt.santos.nuno;
 
-public class Song {
+import java.util.Iterator;
+
+public class Song  {
 
 	private int id;
 	private String name;
@@ -8,14 +10,20 @@ public class Song {
 	private String measure;
 	private String sProgression;
 	public Progression progression;
+	private String key;
 	
-	public Song(int id, String name, String genre, String measure, String sProgression) {
+	public Song(int id, String name, String genre, String measure, String key, String sProgression) {
 		this.id = id;
 		this.name = name;
 		this.genre = genre;
 		this.measure = measure;
+		this.key = key;
 		this.sProgression = sProgression;
 		this.progression = new Progression(sProgression);		
+	}
+	
+	public String getKey() {
+		return key;
 	}
 	
 	@Override

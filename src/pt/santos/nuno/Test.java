@@ -84,6 +84,20 @@ public class Test extends TestCase {
 		Cmaj.transpose(2);
 		assertEquals(Cmaj, Dmaj);		
 		assertEquals(Cmaj.equals(Emaj), false);
-	}	
+	}
+	
+	public void testMarkov() {
+		
+//		ChordNode cn = new ChordNode(1, 1);
+//		ChordNode cn2 = new ChordNode(1, 1);
+//		ChordNode cn3 = new ChordNode(1, 2);
+//		assertEquals(cn.equals(cn2), true);
+//		assertEquals(cn.equals(cn3), false);
+		
+		Markov markov = new Markov(1);
+		String transition = "(0,1)->(0,2)";
+		assertEquals("(0,1)", markov.getOriginState(transition));
+		assertEquals("(0,2)", markov.getDestinationState(transition)); 		
+	}
 	
 }

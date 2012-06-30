@@ -190,8 +190,9 @@ public class Note implements Comparable<Note> {
 		track.add(eventOff);
 	}
 
-	public int getFunction(int key) {
-		return (getPitchClass() + (12 - key)) % 12;
+	public int getFunction(String key) {
+		int iKey = Note.getMidiValue(key) - 60; //TODO
+		return (getPitchClass() + (12 - iKey)) % 12;
 	}
 	
 }
