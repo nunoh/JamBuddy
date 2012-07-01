@@ -233,15 +233,15 @@ public class GUI implements WindowListener {
 		panelChords.add(tf16);
 
 		JButton btnPlay = new JButton("Play");
-		btnPlay.setBounds(196, 21, 68, 23);
+		btnPlay.setBounds(182, 0, 68, 23);
 		frame.getContentPane().add(btnPlay);
 
 		JButton btnExportMidi = new JButton("Export MIDI");
-		btnExportMidi.setBounds(196, 55, 107, 23);
+		btnExportMidi.setBounds(280, 34, 107, 23);
 		frame.getContentPane().add(btnExportMidi);
 
 		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(274, 21, 89, 23);
+		btnSave.setBounds(181, 66, 89, 23);
 		frame.getContentPane().add(btnSave);
 
 		JSlider slider = new JSlider();
@@ -259,6 +259,18 @@ public class GUI implements WindowListener {
 		JSlider slider_1 = new JSlider();
 		slider_1.setBounds(224, 123, 200, 23);
 		frame.getContentPane().add(slider_1);
+		
+		JButton btnGenerate = new JButton("Generate");
+		btnGenerate.setBounds(181, 34, 89, 23);
+		frame.getContentPane().add(btnGenerate);
+		
+		JButton btnStop = new JButton("Stop");
+		btnStop.setBounds(334, 0, 68, 23);
+		frame.getContentPane().add(btnStop);
+		
+		JButton btnPause = new JButton("Pause");
+		btnPause.setBounds(252, 0, 73, 23);
+		frame.getContentPane().add(btnPause);
 
 
 		btnPlay.addActionListener(new PlayListener());			
@@ -286,9 +298,6 @@ public class GUI implements WindowListener {
 					int bpm = (Integer) spnBPM.getValue();
 					app.setBPM(bpm);
 					
-					
-					
-
 					app.setProgression(prog);
 					app.playProgression();
 
