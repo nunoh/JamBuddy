@@ -43,10 +43,11 @@ public class Api implements MetaEventListener {
 	public static Track track;
 	public Progression progression;
 	public int bpm;
-	public Markov markov;
+	public static Markov markov;
 	public static int key;
 
-	public Api() {		
+	public Api() {
+		
 		chords = new ArrayList<ChordDef>();
 		patterns = new ArrayList<Pattern>();
 		songs = new ArrayList<Song>();
@@ -68,6 +69,8 @@ public class Api implements MetaEventListener {
 		key = 2; // C
 		
 		markov = new Markov(1);
+		
+		openMidiDevice();
 	}
 
 	public void loadXML() {
@@ -251,7 +254,7 @@ public class Api implements MetaEventListener {
 		this.bpm = bpm;
 	}
 
-	public void loadSongs() {				
+	public static void loadSongs() {				
 		for (Song song : songs) {										
 			for (ChordProg chord : song.progression) {
 				int function = chord.getNote(0).getFunction(song.getKey());

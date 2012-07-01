@@ -51,7 +51,7 @@ public class Progression implements Iterable<ChordProg> {
 	}
 	
 	public void addChord(Chord chord) {
-		chords.add(new ChordProg(chord, 1));
+		chords.add(new ChordProg(chord, 4));
 	}
 
 	public void generate(Track track) {		

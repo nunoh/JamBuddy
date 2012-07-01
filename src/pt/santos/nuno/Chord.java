@@ -41,7 +41,7 @@ public class Chord implements Iterable<Note> {
 	public Chord(String chord) {
 		this(parseChord(chord, "note"), parseChord(chord, "chord"));		
 	}
-	
+		
 	private static String parseChord(String chord, String param) {
 		String notes = "^([CDEFGAB])";
 		String accidentals = "((?:#|##|b|bb)?)";
@@ -68,7 +68,7 @@ public class Chord implements Iterable<Note> {
 			}
 		}
 		else {
-			System.out.println("invalid chord string");
+//			System.out.println("invalid chord string");
 			return null;
 		}
 		return null;
