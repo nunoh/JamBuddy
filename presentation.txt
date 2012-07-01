@@ -1,0 +1,6 @@
+- markov nth order
+- no dependencies (all from scratch)
+- voice leading algorithm
+- configurations all in a xml file
+- patterns
+- os indenpendent

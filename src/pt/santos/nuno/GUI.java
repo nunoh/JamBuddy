@@ -27,6 +27,7 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.JSeparator;
 
 public class GUI implements WindowListener {
 
@@ -200,9 +201,9 @@ public class GUI implements WindowListener {
 		}
 
 		// PLAY
-		JButton btnPlay = new JButton("Play");
-		btnPlay.setIcon(new ImageIcon("C:\\Users\\Nuno\\Desktop\\icon.png"));
-		btnPlay.setBounds(315, 185, 114, 57);
+		JButton btnPlay = new JButton("");
+		btnPlay.setIcon(new ImageIcon("icons\\play.png"));
+		btnPlay.setBounds(181, 21, 50, 50);
 		frame.getContentPane().add(btnPlay);
 		btnPlay.addActionListener(new ActionListener() {
 			Progression prog;
@@ -253,13 +254,15 @@ public class GUI implements WindowListener {
 		
 
 	// EXPORT
-	JButton btnExportMidi = new JButton("Export MIDI");
-	btnExportMidi.setBounds(280, 34, 107, 23);
+	JButton btnExportMidi = new JButton("");
+	btnExportMidi.setIcon(new ImageIcon("icons\\export.png"));
+	btnExportMidi.setBounds(481, 21, 50, 50);
 	frame.getContentPane().add(btnExportMidi);
 
 	// SAVE
-	JButton btnSave = new JButton("Save");
-	btnSave.setBounds(181, 66, 89, 23);
+	JButton btnSave = new JButton("");
+	btnSave.setIcon(new ImageIcon("icons\\save.png"));
+	btnSave.setBounds(361, 21, 50, 50);
 	frame.getContentPane().add(btnSave);
 
 	// RTHYTMIC
@@ -281,8 +284,9 @@ public class GUI implements WindowListener {
 	frame.getContentPane().add(slHarmonic);
 
 	// GENERATE
-	JButton btnGenerate = new JButton("Generate");
-	btnGenerate.setBounds(181, 34, 89, 23);
+	JButton btnGenerate = new JButton("");
+	btnGenerate.setIcon(new ImageIcon("icons\\generate.png"));
+	btnGenerate.setBounds(421, 21, 50, 50);
 	btnGenerate.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			for (int i = 0; i < 4; i++) {
@@ -294,7 +298,8 @@ public class GUI implements WindowListener {
 	frame.getContentPane().add(btnGenerate);
 
 	// STOP
-	JButton btnStop = new JButton("Stop");
+	JButton btnStop = new JButton("");
+	btnStop.setIcon(new ImageIcon("icons\\stop.png"));
 	btnStop.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if (Api.sequencer.isOpen()) {
@@ -302,11 +307,12 @@ public class GUI implements WindowListener {
 			}
 		}
 	});
-	btnStop.setBounds(334, 0, 68, 23);
+	btnStop.setBounds(301, 21, 50, 50);
 	frame.getContentPane().add(btnStop);
 
 	// PAUSE
-	JButton btnPause = new JButton("Pause");
+	JButton btnPause = new JButton("");
+	btnPause.setIcon(new ImageIcon("icons\\pause.png"));
 	btnPause.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if (Api.sequencer.isOpen()) {
@@ -315,8 +321,17 @@ public class GUI implements WindowListener {
 			}
 		}
 	});
-	btnPause.setBounds(252, 0, 73, 23);
+	btnPause.setBounds(241, 21, 50, 50);
 	frame.getContentPane().add(btnPause);
+	
+	JSeparator separator = new JSeparator();
+	separator.setBounds(334, 21, 1, 2);
+	frame.getContentPane().add(separator);
+	
+	JSlider slider = new JSlider();
+	slider.setOrientation(SwingConstants.VERTICAL);
+	slider.setBounds(23, 217, 55, 146);
+	frame.getContentPane().add(slider);
 	
 	}
 
