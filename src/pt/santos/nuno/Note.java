@@ -128,6 +128,10 @@ public class Note implements Comparable<Note> {
 		return pitch % 12;
 	}
 	
+	public static int getPitchClass(int pitch) {
+		return pitch % 12;
+	}
+	
 	public static void setToStringMode(ToStringMode mode) {
 		toStringMode = mode;
 	}

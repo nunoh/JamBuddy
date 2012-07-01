@@ -23,7 +23,7 @@ public class Main {
 		app = new Api();
 		app.loadXML();
 		app.loadSongs();
-		System.out.println(app.markov.map);
+		System.out.println(app.markov.map);		
 
 		for (int i = 0; i < 10; i++)
 			System.out.println(app.markov.getNext());

@@ -1,2 +1,5 @@
 # ignore bin folder
 bin/
+
+# ignore .settings folder
+.settings/

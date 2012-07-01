@@ -133,5 +133,9 @@ public class Markov {
 	public String getDestinationState(String transition) {
 		return transition.substring(transition.indexOf(Markov.stateDiviser)+Markov.stateDiviser.length());		
 	}
+
+	public void setPrevious(String string) {
+		
+	}
 	
 }

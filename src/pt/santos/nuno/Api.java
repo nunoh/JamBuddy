@@ -23,12 +23,16 @@ import org.w3c.dom.NodeList;
 public class Api implements MetaEventListener {
 	
 	// constants
-	public static final String PATH_XML_CONFIG = "src/config.xml";	
+	public static final String PATH_XML_CONFIG = "src/config.xml";
+	public static final String CHORDS_DELIMITER = "|";
+	
+	// defaults
 	public static final int DEFAULT_NOTE_VELOCITY = 80;
 	public static final int DEFAULT_MIDI_DEVICE = 2;
 	public static final int DEFAULT_PPQ_TICKS = 1;
-	public static final int DEFAULT_SEQUENCE_BPM = 80;
-	public static final String chordsDelimiter = "|";
+	public static final int DEFAULT_SEQUENCE_BPM = 150;
+	public static final int DEFAULT_KEY = 0; // C
+	public static final int DEFAULT_PATTERN = 0; // UP	
 	
 	// private
 	private static ArrayList<ChordDef> chords;
@@ -68,11 +72,11 @@ public class Api implements MetaEventListener {
 		track = sequence.createTrack();
 		
 		bpm = DEFAULT_SEQUENCE_BPM;
-		
-		key = 2; // C
-		
+				
 		markov = new Markov(1);
 		
+		key = DEFAULT_KEY;
+			
 		openMidiDevice();
 	}
 
@@ -134,7 +138,7 @@ public class Api implements MetaEventListener {
 				String measure = elem.getAttribute("measure");
 				String key = elem.getAttribute("key");
 				String sProg = elem.getTextContent();
-				sProg = sProg.substring(sProg.indexOf(chordsDelimiter), sProg.lastIndexOf(chordsDelimiter)+1);
+				sProg = sProg.substring(sProg.indexOf(CHORDS_DELIMITER), sProg.lastIndexOf(CHORDS_DELIMITER)+1);
 				songs.add(new Song(id, name, genre, measure, key, sProg));
 			}
 			
@@ -143,6 +147,8 @@ public class Api implements MetaEventListener {
 		catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
+		
+		pattern = patterns.get(DEFAULT_PATTERN);
 	}
 	
 	public ArrayList<ChordDef> getChords() {
@@ -276,6 +282,18 @@ public class Api implements MetaEventListener {
 
 	public void setPattern(Pattern pattern) {
 		Api.pattern = pattern;
+	}
+	
+	public Chord getMarkovChord(String str) {
+		int idx = str.indexOf(",");
+		String function = str.substring(1, idx);
+		int iFunction = Integer.parseInt(function);
+		int pitchclass = (iFunction + key) % 12;
+		String type = str.substring(idx+1, str.length()-1);
+		int iType = Integer.parseInt(type);
+		Chord ret = new Chord(pitchclass + 60, iType);
+//		System.out.println("function is " + pitchclass + " type is " + type + " chord is " + ret);
+		return ret;
 	}
 	
 }

@@ -26,7 +26,7 @@ public class Progression implements Iterable<ChordProg> {
 		
 		chords = new ArrayList<ChordProg>();
 		
-		String tokens[] = sProgression.split("\\" + Api.chordsDelimiter);
+		String tokens[] = sProgression.split("\\" + Api.CHORDS_DELIMITER);
 		for (int i = 1; i < tokens.length; i++) {
 			String token = tokens[i].trim();
 			if (token.contains(" ")) {
@@ -86,9 +86,6 @@ public class Progression implements Iterable<ChordProg> {
 			}
 		}
 		
-//		System.out.println("ret : " + ret);
-//		System.out.println("difs : " + difs);
-
 		// for each pitch class of the 2nd chord that isn't in the 1st chord, 
 		// check which pitch of that pitch class note is nearest to any pitch 
 		// of the notes of the 1st chord
@@ -138,8 +135,10 @@ public class Progression implements Iterable<ChordProg> {
 	
 	public void playPattern(ChordProg chord, Track track) {
 				
-		System.out.println(chord.getRoot() + " " + chord.getBeats());
-				
+//		System.out.println(chord.getRoot() + " " + chord.getBeats());		
+		
+//		System.out.println(Api.pattern);
+		
 		for (int i = 0; i < Api.pattern.getSize(); i++) {
 			int iNote = chord.getPattern(i);
 			if (iNote > chord.getNumNotes()) {
