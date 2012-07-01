@@ -34,7 +34,7 @@ public class Main {
 		app.openMidiDevice();
 
 		Song s = app.getSongs().get(0);
-		s.progression.setPattern(new Pattern("up"));
+//		s.progression.setPattern(new Pattern("up"));
 
 		app.openMidiDevice();
 
@@ -55,11 +55,12 @@ public class Main {
 		Progression prog = new Progression();
 		prog.addChord(Cmaj7);
 		prog.addChord(Fmaj);
-		prog.setPattern(new Pattern("up"));
-	app.setBPM(100);
+//		prog.setPattern(new Pattern("up"));
 
-	app.setProgression(prog);
-	app.playProgression();
+		app.setBPM(100);
+	
+		app.setProgression(prog);
+		app.playProgression();
 
 		app.closeMidiDevice();
 	}

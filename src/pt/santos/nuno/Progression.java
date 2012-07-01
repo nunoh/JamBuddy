@@ -122,11 +122,11 @@ public class Progression implements Iterable<ChordProg> {
 //		System.out.println("ret : " + ret);		
 	}
 
-	public void setPattern(Pattern pattern) {
-		for (ChordProg chord : chords) {
-			chord.setPattern(pattern);
-		}
-	}
+//	public void setPattern(Pattern pattern) {
+//		for (ChordProg chord : chords) {
+//			chord.setPattern(pattern);
+//		}
+//	}
 	
 	public int getBPM() {
 		return this.bpm;
@@ -140,7 +140,7 @@ public class Progression implements Iterable<ChordProg> {
 				
 		System.out.println(chord.getRoot() + " " + chord.getBeats());
 				
-		for (int i = 0; i < chord.getPatternSize(); i++) {
+		for (int i = 0; i < Api.pattern.getSize(); i++) {
 			int iNote = chord.getPattern(i);
 			if (iNote > chord.getNumNotes()) {
 				System.err.println("not playing note, because it doesn't fit in chord.");

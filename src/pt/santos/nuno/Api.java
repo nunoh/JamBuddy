@@ -27,7 +27,7 @@ public class Api implements MetaEventListener {
 	public static final int DEFAULT_NOTE_VELOCITY = 80;
 	public static final int DEFAULT_MIDI_DEVICE = 2;
 	public static final int DEFAULT_PPQ_TICKS = 1;
-	public static final int DEFAULT_SEQUENCE_BPM = 60;
+	public static final int DEFAULT_SEQUENCE_BPM = 80;
 	public static final String chordsDelimiter = "|";
 	
 	// private
@@ -35,16 +35,19 @@ public class Api implements MetaEventListener {
 	private static ArrayList<Pattern> patterns;
 	private static ArrayList<Song> songs;
 	
-	// public
+	// public static 
 	public static MidiDevice midiDevice;
 	public static Receiver receiver;
 	public static Sequencer sequencer;
 	public static Sequence sequence;
-	public static Track track;
+	public static Track track;	
+	public static Pattern pattern;
+	public static Markov markov;
+	
+	// public non static
 	public Progression progression;
 	public int bpm;
-	public static Markov markov;
-	public static int key;
+	public int key;			
 
 	public Api() {
 		
@@ -235,6 +238,12 @@ public class Api implements MetaEventListener {
 			return;
 		}
 		
+		try {
+			sequence = new Sequence(Sequence.PPQ, DEFAULT_PPQ_TICKS);
+		} catch (InvalidMidiDataException e1) {
+			e1.printStackTrace();
+		}
+		
 		Track track = sequence.createTrack();
 		this.progression.generate(track);
 		
@@ -264,6 +273,9 @@ public class Api implements MetaEventListener {
 			}
 		}
 	}
-	
+
+	public void setPattern(Pattern pattern) {
+		Api.pattern = pattern;
+	}
 	
 }

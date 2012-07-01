@@ -28,8 +28,8 @@
    	</chords>	
 	
 	<patterns>
-	    <pattern type="1" name="up">1233</pattern>
-	    <pattern type="2" name="down">3211</pattern>
+	    <pattern type="1" name="Up">1233</pattern>
+	    <pattern type="2" name="Down">3211</pattern>
 	</patterns>
 	
 	<songs>

@@ -8,7 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
@@ -31,10 +35,8 @@ public class GUI implements WindowListener {
 	// string arrays
 	private final static String[] keys = { "C", "D", "E", "F", "G", "A", "B" };
 	private final static String[] accidentals = { "b", " ", "#" };
-	private final static String[] patterns = { "Up", "Down", "Freestylo" };
 
-	// the textfields
-	private JTextField tf1, tf2, tf3, tf4, tf5, tf6, tf7, tf8, tf9, tf10, tf11, tf12, tf13, tf14, tf15, tf16;  
+	JTextField tfs[];
 
 	// spinners
 	private JSpinner spnBPM;
@@ -49,19 +51,25 @@ public class GUI implements WindowListener {
 	private JLabel lblBpm;
 	private JLabel lblPattern;
 
+	// panels
+	private JPanel panelChords;
+
+	private boolean paused = false;
+
 	private static Api app;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					GUI window = new GUI();					
-//					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					window.frame.setVisible(true);
-
+				try {					
 					app = new Api();
 					app.loadXML();
+					app.loadSongs();
 					app.openMidiDevice();
+
+					GUI window = new GUI();
+					window.frame.setVisible(true);
+					//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -87,12 +95,12 @@ public class GUI implements WindowListener {
 
 		frame = new JFrame();
 		frame.setTitle("Jazz Markov Generator");
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 587, 480);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
 		JPanel panelToolbar = new JPanel();
-		panelToolbar.setBounds(0, 0, 171, 89);
+		panelToolbar.setBounds(0, 0, 171, 192);
 		frame.getContentPane().add(panelToolbar);
 		panelToolbar.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
@@ -119,6 +127,8 @@ public class GUI implements WindowListener {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,}));
 
 		// KEY
@@ -135,180 +145,179 @@ public class GUI implements WindowListener {
 		lblBpm = new JLabel("BPM");
 		panelToolbar.add(lblBpm, "2, 4, right, default");
 
-		spnBPM = new JSpinner();
-		panelToolbar.add(spnBPM, "6, 4, 5, 1, left, top");
-		spnBPM.setValue(120);
+		SpinnerModel sm = new SpinnerNumberModel(Api.DEFAULT_SEQUENCE_BPM, 20, 200, 1);
+		spnBPM = new JSpinner(sm);
+		panelToolbar.add(spnBPM, "6, 4, 4, 1, fill, top");
 
 		// PATTERN
 		lblPattern = new JLabel("Pattern");
 		panelToolbar.add(lblPattern, "2, 6, right, default");
 
+		String patterns[] = new String[app.getPatterns().size()];
+		for (int i = 0; i < app.getPatterns().size(); i++) {
+			Pattern p = app.getPatterns().get(i);
+			patterns[i] = p.getName();
+		}
+
 		cbbPatterns = new JComboBox(patterns);
 		panelToolbar.add(cbbPatterns, "6, 6, 5, 1, left, top");
+		cbbPatterns.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JComboBox cb = (JComboBox)e.getSource();
+				String sPattern = (String)cb.getSelectedItem();
+				app.setPattern(new Pattern(sPattern)); 
+			}		
+		});
 
-		// panel chords
+		// LOOP
+		JCheckBox chckbxLoop = new JCheckBox("Loop");
+		panelToolbar.add(chckbxLoop, "6, 8, 5, 1");
+		
+		JLabel lblLoopCount = new JLabel("Loop Count");
+		panelToolbar.add(lblLoopCount, "2, 10, 7, 1, center, default");
+		
+		JSpinner spinner = new JSpinner();
+		panelToolbar.add(spinner, "10, 10");
+
+		// CHORDS
 		JPanel panelChords = new JPanel();
-		panelChords.setBounds(67, 151, 300, 100);
+		panelChords.setBounds(118, 249, 300, 100);
 		frame.getContentPane().add(panelChords);
 		panelChords.setLayout(new GridLayout(4, 4, 1, 1));
 
-		tf1 = new JTextField();
-		tf1.setHorizontalAlignment(SwingConstants.CENTER);
-		tf1.setColumns(10);
-		panelChords.add(tf1);
+		tfs = new JTextField[20];
 
-		tf2 = new JTextField();
-		tf2.setHorizontalAlignment(SwingConstants.CENTER);
-		tf2.setColumns(10);
-		panelChords.add(tf2);
+		for (int i = 0; i < 16; i++) {
+			JTextField tf = new JTextField();
+			tf.setHorizontalAlignment(SwingConstants.CENTER);
+			tfs[i] = tf;
+		}
 
-		tf3 = new JTextField();
-		tf3.setHorizontalAlignment(SwingConstants.CENTER);
-		tf3.setColumns(10);
-		panelChords.add(tf3);
+		for (int i = 0; i < tfs.length; i++) {
+			JTextField tf = tfs[i];
+			if (tf != null)
+				panelChords.add(tf);
+		}
 
-		tf4 = new JTextField();
-		tf4.setHorizontalAlignment(SwingConstants.CENTER);
-		tf4.setColumns(2);
-		panelChords.add(tf4);
-
-		tf5 = new JTextField();
-		tf5.setHorizontalAlignment(SwingConstants.CENTER);
-		tf5.setColumns(10);
-		panelChords.add(tf5);
-
-		tf6 = new JTextField();
-		tf6.setHorizontalAlignment(SwingConstants.CENTER);
-		tf6.setColumns(10);
-		panelChords.add(tf6);
-
-		tf7 = new JTextField();
-		tf7.setHorizontalAlignment(SwingConstants.CENTER);
-		tf7.setColumns(10);
-		panelChords.add(tf7);
-
-		tf8 = new JTextField();
-		tf8.setHorizontalAlignment(SwingConstants.CENTER);
-		tf8.setColumns(10);
-		panelChords.add(tf8);
-
-		tf9 = new JTextField();
-		tf9.setHorizontalAlignment(SwingConstants.CENTER);
-		tf9.setColumns(10);
-		panelChords.add(tf9);
-
-		tf10 = new JTextField();
-		tf10.setHorizontalAlignment(SwingConstants.CENTER);
-		tf10.setColumns(10);
-		panelChords.add(tf10);
-
-		tf11 = new JTextField();
-		tf11.setHorizontalAlignment(SwingConstants.CENTER);
-		tf11.setColumns(10);
-		panelChords.add(tf11);
-
-		tf12 = new JTextField();
-		tf12.setHorizontalAlignment(SwingConstants.CENTER);
-		tf12.setColumns(10);
-		panelChords.add(tf12);
-
-		tf13 = new JTextField();
-		tf13.setHorizontalAlignment(SwingConstants.CENTER);
-		tf13.setColumns(10);
-		panelChords.add(tf13);
-
-		tf14 = new JTextField();
-		tf14.setHorizontalAlignment(SwingConstants.CENTER);
-		tf14.setColumns(10);
-		panelChords.add(tf14);
-
-		tf15 = new JTextField();
-		tf15.setHorizontalAlignment(SwingConstants.CENTER);
-		tf15.setColumns(2);
-		panelChords.add(tf15);
-
-		tf16 = new JTextField();
-		tf16.setHorizontalAlignment(SwingConstants.CENTER);
-		tf16.setColumns(2);
-		panelChords.add(tf16);
-
+		// PLAY
 		JButton btnPlay = new JButton("Play");
-		btnPlay.setBounds(182, 0, 68, 23);
+		btnPlay.setIcon(new ImageIcon("C:\\Users\\Nuno\\Desktop\\icon.png"));
+		btnPlay.setBounds(315, 185, 114, 57);
 		frame.getContentPane().add(btnPlay);
+		btnPlay.addActionListener(new ActionListener() {
+			Progression prog;
+			public void actionPerformed(ActionEvent e) {
+				if (paused) {
+					Api.sequencer.start();
+					return;
+				}
 
-		JButton btnExportMidi = new JButton("Export MIDI");
-		btnExportMidi.setBounds(280, 34, 107, 23);
-		frame.getContentPane().add(btnExportMidi);
+				// build progression
+				for (int i = 0; i < tfs.length; i++) {
+					JTextField tf = tfs[i];
+					if (tf != null) {
+						handle(tf);
+					}
+				}
 
-		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(181, 66, 89, 23);
-		frame.getContentPane().add(btnSave);
+				// bpm
+				int bpm = (Integer) spnBPM.getValue();
+				app.setBPM(bpm);
 
-		JSlider slider = new JSlider();
-		slider.setBounds(224, 89, 200, 23);
-		frame.getContentPane().add(slider);
-
-		JLabel lblDensidadeRtmica = new JLabel("Rhytmic Density");
-		lblDensidadeRtmica.setBounds(118, 98, 96, 14);
-		frame.getContentPane().add(lblDensidadeRtmica);
-
-		JLabel lblHarmonicComplexity = new JLabel("Harmonic Complexity");
-		lblHarmonicComplexity.setBounds(90, 123, 124, 14);
-		frame.getContentPane().add(lblHarmonicComplexity);
-
-		JSlider slider_1 = new JSlider();
-		slider_1.setBounds(224, 123, 200, 23);
-		frame.getContentPane().add(slider_1);
-		
-		JButton btnGenerate = new JButton("Generate");
-		btnGenerate.setBounds(181, 34, 89, 23);
-		frame.getContentPane().add(btnGenerate);
-		
-		JButton btnStop = new JButton("Stop");
-		btnStop.setBounds(334, 0, 68, 23);
-		frame.getContentPane().add(btnStop);
-		
-		JButton btnPause = new JButton("Pause");
-		btnPause.setBounds(252, 0, 73, 23);
-		frame.getContentPane().add(btnPause);
-
-
-		btnPlay.addActionListener(new PlayListener());			
-	}
-
-	class PlayListener implements ActionListener {		
-
-		public void actionPerformed(ActionEvent e) {
-
-			String t = tf1.getText();
-
-			if (t.equals("")) {
-				tf1.setBackground(Color.WHITE);
+				// play
+				app.setProgression(prog);
+				app.playProgression();		
 			}
-
-			else {
-				try {
-					Chord c = new Chord(t);
-					tf1.setBackground(Color.WHITE);
-
-					Progression prog = new Progression();
-					prog.addChord(c);
-					prog.setPattern(new Pattern("up"));
-					
-					int bpm = (Integer) spnBPM.getValue();
-					app.setBPM(bpm);
-					
-					app.setProgression(prog);
-					app.playProgression();
-
+			
+			public void handle(JTextField tf) {
+				String txt = tf.getText();
+				if (txt.equals("")) {
+					tf.setBackground(Color.WHITE);
 				}
-				catch (Exception exc) {
-					exc.printStackTrace();
-					System.out.println("wrong");
-					tf1.setBackground(Color.red);
+
+				else {
+					try {
+						Chord c = new Chord(txt);					
+						prog.addChord(c);
+						System.out.println(c);
+						tf.setBackground(Color.WHITE);
+					}
+					catch (Exception exc) {
+						exc.printStackTrace();
+						tf.setBackground(Color.red);
+					}
 				}
+			}
+		});
+		
+		
+
+	// EXPORT
+	JButton btnExportMidi = new JButton("Export MIDI");
+	btnExportMidi.setBounds(280, 34, 107, 23);
+	frame.getContentPane().add(btnExportMidi);
+
+	// SAVE
+	JButton btnSave = new JButton("Save");
+	btnSave.setBounds(181, 66, 89, 23);
+	frame.getContentPane().add(btnSave);
+
+	// RTHYTMIC
+	JSlider slRhytmic = new JSlider();
+	slRhytmic.setBounds(315, 114, 200, 23);
+	frame.getContentPane().add(slRhytmic);
+
+	JLabel lblRhytmic = new JLabel("Rhytmic Density");
+	lblRhytmic.setBounds(182, 123, 96, 14);
+	frame.getContentPane().add(lblRhytmic);
+
+	// HARMONIC
+	JLabel lblHarmonicComplexity = new JLabel("Harmonic Complexity");
+	lblHarmonicComplexity.setBounds(181, 160, 124, 14);
+	frame.getContentPane().add(lblHarmonicComplexity);
+
+	JSlider slHarmonic = new JSlider();
+	slHarmonic.setBounds(315, 151, 200, 23);
+	frame.getContentPane().add(slHarmonic);
+
+	// GENERATE
+	JButton btnGenerate = new JButton("Generate");
+	btnGenerate.setBounds(181, 34, 89, 23);
+	btnGenerate.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			for (int i = 0; i < 4; i++) {
+				String next = app.markov.getNext();
+				System.out.println(next);
 			}
 		}
+	});
+	frame.getContentPane().add(btnGenerate);
+
+	// STOP
+	JButton btnStop = new JButton("Stop");
+	btnStop.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if (Api.sequencer.isOpen()) {
+				Api.sequencer.stop();
+			}
+		}
+	});
+	btnStop.setBounds(334, 0, 68, 23);
+	frame.getContentPane().add(btnStop);
+
+	// PAUSE
+	JButton btnPause = new JButton("Pause");
+	btnPause.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if (Api.sequencer.isOpen()) {
+				paused = true;
+				Api.sequencer.stop();
+			}
+		}
+	});
+	btnPause.setBounds(252, 0, 73, 23);
+	frame.getContentPane().add(btnPause);
+	
 	}
 
 	public void windowClosing(WindowEvent e) {
