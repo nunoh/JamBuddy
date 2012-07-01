@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequencer;
@@ -22,7 +23,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -30,6 +30,12 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -38,40 +44,37 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class GUI implements WindowListener {
 
-	private JFrame frame;
-
 	// string arrays
 	private final static String[] keys = { "C", "D", "E", "F", "G", "A", "B" };
-	private final static String[] accidentals = { "b", " ", "#" };
-	private final static String iconsFolder = "icons";
+	private final static String[] accidentals = { "b", " ", "#" };	
+	private final static String iconsFolder = 	"icons";
 
-	JTextField tfs[];
-
-	// spinners
+	// button icons	
+	private final static String playIcon = 		iconsFolder + "\\play2.png";
+	private final static String pauseIcon = 	iconsFolder + "\\pause2.png";
+	private final static String stopIcon = 		iconsFolder + "\\stop.png";
+	private final static String generateIcon = 	iconsFolder + "\\generate.png";
+	private final static String saveIcon = 		iconsFolder + "\\save.png";
+	private final static String exportIcon = 	iconsFolder + "\\export.png";
+	private final static String openIcon = 		iconsFolder + "\\open.png";
+	
+	private JFrame frame;
+	private JTextField tfs[];
 	private JSpinner spnBPM;
 	private JSpinner spnLoopCount; 
-
-	// comboboxes
 	private JComboBox cbbPatterns;
 	private JComboBox cbbKeys;
 	private JComboBox cbbAccidentals;
-
-	// checkboxes
 	private JCheckBox cbLoop;
-
-	// labels
 	private JLabel lblKey;
 	private JLabel lblBpm;
 	private JLabel lblPattern;
-
-	// panels
 	private JPanel panelChords;
-
-	// file chooser for export
-	JFileChooser fcExport;
-
+	private JFileChooser fileChooser;
+	private JFileChooser fcOpen;
+	
+	Progression prog;
 	private boolean paused = false;
-
 	private static Api app;
 
 	public static void main(String[] args) {
@@ -116,7 +119,7 @@ public class GUI implements WindowListener {
 		frame.getContentPane().setLayout(null);
 
 		JPanel panelToolbar = new JPanel();
-		panelToolbar.setBounds(0, 0, 171, 192);
+		panelToolbar.setBounds(374, 116, 171, 192);
 		frame.getContentPane().add(panelToolbar);
 		panelToolbar.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
@@ -222,7 +225,7 @@ public class GUI implements WindowListener {
 
 		// CHORDS
 		JPanel panelChords = new JPanel();
-		panelChords.setBounds(118, 249, 300, 100);
+		panelChords.setBounds(52, 118, 300, 100);
 		frame.getContentPane().add(panelChords);
 		panelChords.setLayout(new GridLayout(4, 4, 1, 1));
 
@@ -242,41 +245,23 @@ public class GUI implements WindowListener {
 
 		// PLAY
 		JButton btnPlay = new JButton("");
-		btnPlay.setIcon(new ImageIcon(iconsFolder + "\\play.png"));
-		btnPlay.setBounds(181, 21, 50, 50);
+		btnPlay.setIcon(new ImageIcon(playIcon));
+		btnPlay.setBounds(52, 21, 50, 50);
 		frame.getContentPane().add(btnPlay);
 		btnPlay.addActionListener(new ActionListener() {
-
-			Progression prog;
-
-			public void actionPerformed(ActionEvent e) {
-
-				prog = new Progression();
-
+			public void actionPerformed(ActionEvent e) {				
 				if (paused) {
 					Api.sequencer.start();
 					return;
 				}
+				
+				buildProgression();
 
-				// build progression
-				for (int i = 0; i < tfs.length; i++) {
-					JTextField tf = tfs[i];
-					if (tf != null) {
-						handle(tf);
-					}
-				}
-
-				app.setProgression(prog);
-
-				play();
-			}
-
-			public void play() {
-				// set bpms
+				// bpms
 				int bpm = (Integer) spnBPM.getValue();
 				app.setBPM(bpm);
 
-				// check for loop count
+				// loop count
 				if (cbLoop.isSelected()) {
 					app.sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
 				}
@@ -289,44 +274,23 @@ public class GUI implements WindowListener {
 				// actually play
 				app.playProgression();
 			}
-
-			public void handle(JTextField tf) {
-				String txt = tf.getText();
-				if (txt.equals("")) {
-					tf.setBackground(Color.WHITE);
-				}
-
-				else {
-					try {
-						Chord c = new Chord(txt);					
-						prog.addChord(c);
-						//						System.out.println(c);
-						tf.setBackground(Color.WHITE);
-					}
-					catch (Exception exc) {
-						exc.printStackTrace();
-						tf.setBackground(Color.red);
-					}
-				}
-			}
 		});
 
 		// EXPORT
-		fcExport = new JFileChooser();
+		fileChooser = new JFileChooser();
 		JButton btnExport = new JButton("");
-		btnExport.setIcon(new ImageIcon(iconsFolder + "\\export.png"));
+		btnExport.setIcon(new ImageIcon(exportIcon));
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				if (!containsChords()) return;
-
-				if (app.sequence.getTracks().length == 0) {
-					JOptionPane.showMessageDialog(frame, "FOO");
+				if (!containsChords()) {
+					JOptionPane.showMessageDialog(frame, "Nothing to export...");	
+					return;
 				}
-
-				int returnVal = fcExport.showSaveDialog(frame);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fcExport.getSelectedFile();				
+				
+				int rval = fileChooser.showSaveDialog(frame);
+				if (rval == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();				
 					try {
 						MidiSystem.write(app.sequence, 1, file);
 					} catch (IOException e1) {
@@ -336,37 +300,104 @@ public class GUI implements WindowListener {
 			}
 		});
 
-		btnExport.setBounds(481, 21, 50, 50);
+		btnExport.setBounds(352, 21, 50, 50);
 		frame.getContentPane().add(btnExport);
 
 		// SAVE
 		JButton btnSave = new JButton("");
-		btnSave.setIcon(new ImageIcon(iconsFolder + "\\save.png"));
-		btnSave.setBounds(421, 21, 50, 50);
+		btnSave.setIcon(new ImageIcon(saveIcon));
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!containsChords()) {
+					JOptionPane.showMessageDialog(frame, "nothing to save...");
+					return;
+				}
+				
+				ArrayList<String> chords = new ArrayList<String>();
+				for (int i = 0; i < tfs.length; i++) {
+					if (tfs[i] != null && !tfs[i].getText().equals("")) {
+						chords.add(tfs[i].getText());
+					}
+				}
+				
+				int rval = fileChooser.showSaveDialog(frame);
+				if (rval == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();								
+					app.saveSong(chords, file);
+				}
+			}			
+		});
+		btnSave.setBounds(292, 21, 50, 50);
 		frame.getContentPane().add(btnSave);
+		
+		// OPEN
+		JButton btnOpen = new JButton("");
+		btnOpen.setIcon(new ImageIcon(openIcon));
+		btnOpen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
+				int rval = fileChooser.showOpenDialog(frame);
+				if (rval == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();								
+					loadSong(file);
+				}
+			}
+			
+			private void loadSong(File file) {
+				try {
+					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+					dbf.setIgnoringElementContentWhitespace(true);
+					DocumentBuilder db = dbf.newDocumentBuilder();			
+					Document dom = db.parse(file);
+					dom.getDocumentElement().normalize();
+
+					NodeList songs = dom.getElementsByTagName("song");
+					Element elem = (Element) songs.item(0);
+					String name = elem.getAttribute("name");				
+					String key = elem.getAttribute("key");
+					String sProg = elem.getTextContent();
+					sProg = sProg.substring(sProg.indexOf(Api.CHORDS_DELIMITER), sProg.lastIndexOf(Api.CHORDS_DELIMITER)+1);
+					
+					System.out.println(sProg);
+					
+					JOptionPane.showMessageDialog(frame, "song progression is " + sProg);
+					
+					String tokens[] = sProg.split("\\" + Api.CHORDS_DELIMITER);
+					for (int i = 1; i < tokens.length; i++) {
+						String token = tokens[i].trim();
+						tfs[i-1].setText(token);
+					}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		btnOpen.setBounds(412, 21, 50, 50);
+		frame.getContentPane().add(btnOpen);
+
 
 		// RTHYTMIC
 		JSlider slRhytmic = new JSlider();
-		slRhytmic.setBounds(315, 105, 200, 23);
+		slRhytmic.setBounds(273, 362, 200, 23);
 		frame.getContentPane().add(slRhytmic);
 
 		JLabel lblRhytmic = new JLabel("Rhytmic Density");
-		lblRhytmic.setBounds(209, 114, 96, 14);
+		lblRhytmic.setBounds(167, 371, 96, 14);
 		frame.getContentPane().add(lblRhytmic);
 
 		// HARMONIC
 		JLabel lblHarmonicComplexity = new JLabel("Harmonic Complexity");
-		lblHarmonicComplexity.setBounds(181, 160, 124, 14);
+		lblHarmonicComplexity.setBounds(139, 417, 124, 14);
 		frame.getContentPane().add(lblHarmonicComplexity);
 
 		JSlider slHarmonic = new JSlider();
-		slHarmonic.setBounds(315, 151, 200, 23);
+		slHarmonic.setBounds(273, 408, 200, 23);
 		frame.getContentPane().add(slHarmonic);
 
 		// GENERATE
 		JButton btnGenerate = new JButton("");
-		btnGenerate.setIcon(new ImageIcon(iconsFolder + "\\generate.png"));
-		btnGenerate.setBounds(361, 21, 50, 50);
+		btnGenerate.setIcon(new ImageIcon(generateIcon));
+		btnGenerate.setBounds(232, 21, 50, 50);
 		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				for (int i = 0; i < 4; i++) {
@@ -383,7 +414,7 @@ public class GUI implements WindowListener {
 
 		// STOP
 		JButton btnStop = new JButton("");
-		btnStop.setIcon(new ImageIcon(iconsFolder + "\\stop.png"));
+		btnStop.setIcon(new ImageIcon(stopIcon));
 		btnStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (Api.sequencer.isOpen()) {
@@ -391,12 +422,12 @@ public class GUI implements WindowListener {
 				}
 			}
 		});
-		btnStop.setBounds(301, 21, 50, 50);
+		btnStop.setBounds(172, 21, 50, 50);
 		frame.getContentPane().add(btnStop);
 
 		// PAUSE
 		JButton btnPause = new JButton("");
-		btnPause.setIcon(new ImageIcon(iconsFolder + "\\pause.png"));
+		btnPause.setIcon(new ImageIcon(pauseIcon));
 		btnPause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (Api.sequencer.isOpen()) {
@@ -405,60 +436,103 @@ public class GUI implements WindowListener {
 				}
 			}
 		});
-		btnPause.setBounds(241, 21, 50, 50);
+		btnPause.setBounds(112, 21, 50, 50);
 		frame.getContentPane().add(btnPause);
-
-		JSeparator separator = new JSeparator();
-		separator.setBounds(334, 21, 1, 2);
-		frame.getContentPane().add(separator);
 
 		JSlider slider = new JSlider();
 		slider.setOrientation(SwingConstants.VERTICAL);
 		slider.setBounds(23, 217, 55, 146);
 		frame.getContentPane().add(slider);
-
+		
+		// LABELS
 		JLabel lblPlay = new JLabel("Play");
 		lblPlay.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblPlay.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPlay.setBounds(183, 74, 46, 14);
+		lblPlay.setBounds(54, 74, 46, 14);
 		frame.getContentPane().add(lblPlay);
 
 		JLabel lblPause = new JLabel("Pause");
 		lblPause.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblPause.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPause.setBounds(243, 74, 46, 14);
+		lblPause.setBounds(114, 74, 46, 14);
 		frame.getContentPane().add(lblPause);
 
 		JLabel lblStop = new JLabel("Stop");
 		lblStop.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblStop.setHorizontalAlignment(SwingConstants.CENTER);
-		lblStop.setBounds(303, 74, 46, 14);
+		lblStop.setBounds(174, 74, 46, 14);
 		frame.getContentPane().add(lblStop);
 
 		JLabel lblGenerate = new JLabel("Generate");
 		lblGenerate.setFont(new Font("Tahoma", Font.BOLD, 10));
 		lblGenerate.setHorizontalAlignment(SwingConstants.CENTER);
-		lblGenerate.setBounds(363, 74, 46, 14);
+		lblGenerate.setBounds(234, 74, 46, 14);
 		frame.getContentPane().add(lblGenerate);
 
 		JLabel lblSave = new JLabel("Save");
 		lblSave.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblSave.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSave.setBounds(423, 74, 46, 14);
+		lblSave.setBounds(294, 74, 46, 14);
 		frame.getContentPane().add(lblSave);
 
 		JLabel lblExport = new JLabel("Export");
 		lblExport.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblExport.setHorizontalAlignment(SwingConstants.CENTER);
-		lblExport.setBounds(483, 74, 46, 14);
+		lblExport.setBounds(354, 74, 46, 14);
 		frame.getContentPane().add(lblExport);
+			
+		JLabel lblOpen = new JLabel("Open");
+		lblOpen.setHorizontalAlignment(SwingConstants.CENTER);
+		lblOpen.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblOpen.setBounds(414, 74, 46, 14);
+		frame.getContentPane().add(lblOpen);
 
+	}
+	
+	public void buildProgression() {
+		
+		prog = new Progression();	
+
+		// build progression
+		for (int i = 0; i < tfs.length; i++) {
+			JTextField tf = tfs[i];
+			if (tf != null) {
+				buildProgressionChord(tf);
+			}
+		}
+		
+		app.setProgression(prog);
+	}
+	
+	public void buildProgressionChord(JTextField tf) {
+		
+		String txt = tf.getText();
+		
+		if (txt.equals("")) {
+			tf.setBackground(Color.WHITE);
+		}
+
+		else {
+			try {
+				Chord c = new Chord(txt);					
+				prog.addChord(c);
+				tf.setBackground(Color.WHITE);
+			}
+			catch (Exception exc) {
+				exc.printStackTrace();
+				tf.setBackground(Color.red);
+			}
+		}
 	}
 
 	public boolean containsChords() {
 		for (int i = 0; i < tfs.length; i++) {
-			if (!(tfs[i].getText().equals("")))
-				return true;
+			JTextField tf = tfs[i];
+			if (tf != null) {
+				String txt = tfs[i].getText();
+				if (!txt.equals(""))
+					return true;
+			}			
 		}
 		return false;
 	}
