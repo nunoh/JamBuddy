@@ -76,7 +76,7 @@ public class Api implements MetaEventListener {
 		markov = new Markov(1);
 		
 		key = DEFAULT_KEY;
-			
+		
 		openMidiDevice();
 	}
 

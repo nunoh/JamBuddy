@@ -20,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
@@ -316,6 +317,13 @@ public class GUI implements WindowListener {
 		btnExport.setIcon(new ImageIcon(iconsFolder + "\\export.png"));
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				if (!containsChords()) return;
+
+				if (app.sequence.getTracks().length == 0) {
+					JOptionPane.showMessageDialog(frame, "FOO");
+				}
+
 				int returnVal = fcExport.showSaveDialog(frame);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fcExport.getSelectedFile();				
@@ -327,7 +335,7 @@ public class GUI implements WindowListener {
 				}
 			}
 		});
-		
+
 		btnExport.setBounds(481, 21, 50, 50);
 		frame.getContentPane().add(btnExport);
 
@@ -445,16 +453,24 @@ public class GUI implements WindowListener {
 		lblExport.setBounds(483, 74, 46, 14);
 		frame.getContentPane().add(lblExport);
 
-}
+	}
 
-public void windowClosing(WindowEvent e) {
-	app.closeMidiDevice();
-}
+	public boolean containsChords() {
+		for (int i = 0; i < tfs.length; i++) {
+			if (!(tfs[i].getText().equals("")))
+				return true;
+		}
+		return false;
+	}
 
-public void windowActivated(WindowEvent e) { }
-public void windowClosed(WindowEvent e) { }
-public void windowDeactivated(WindowEvent e) { }
-public void windowDeiconified(WindowEvent e) { }
-public void windowIconified(WindowEvent e) { }
-public void windowOpened(WindowEvent e) { }	
+	public void windowClosing(WindowEvent e) {
+		app.closeMidiDevice();
+	}
+
+	public void windowActivated(WindowEvent e) { }
+	public void windowClosed(WindowEvent e) { }
+	public void windowDeactivated(WindowEvent e) { }
+	public void windowDeiconified(WindowEvent e) { }
+	public void windowIconified(WindowEvent e) { }
+	public void windowOpened(WindowEvent e) { }	
 }
