@@ -28,6 +28,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.JSeparator;
+import java.awt.Font;
 
 public class GUI implements WindowListener {
 
@@ -172,7 +173,7 @@ public class GUI implements WindowListener {
 
 		// LOOP
 		JCheckBox chckbxLoop = new JCheckBox("Loop");
-		panelToolbar.add(chckbxLoop, "6, 8, 5, 1");
+		panelToolbar.add(chckbxLoop, "6, 8, 5, 1, left, default");
 		
 		JLabel lblLoopCount = new JLabel("Loop Count");
 		panelToolbar.add(lblLoopCount, "2, 10, 7, 1, center, default");
@@ -267,11 +268,11 @@ public class GUI implements WindowListener {
 
 	// RTHYTMIC
 	JSlider slRhytmic = new JSlider();
-	slRhytmic.setBounds(315, 114, 200, 23);
+	slRhytmic.setBounds(315, 105, 200, 23);
 	frame.getContentPane().add(slRhytmic);
 
 	JLabel lblRhytmic = new JLabel("Rhytmic Density");
-	lblRhytmic.setBounds(182, 123, 96, 14);
+	lblRhytmic.setBounds(209, 114, 96, 14);
 	frame.getContentPane().add(lblRhytmic);
 
 	// HARMONIC
@@ -332,6 +333,42 @@ public class GUI implements WindowListener {
 	slider.setOrientation(SwingConstants.VERTICAL);
 	slider.setBounds(23, 217, 55, 146);
 	frame.getContentPane().add(slider);
+	
+	JLabel lblPlay = new JLabel("Play");
+	lblPlay.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	lblPlay.setHorizontalAlignment(SwingConstants.CENTER);
+	lblPlay.setBounds(183, 74, 46, 14);
+	frame.getContentPane().add(lblPlay);
+	
+	JLabel lblPause = new JLabel("Pause");
+	lblPause.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	lblPause.setHorizontalAlignment(SwingConstants.CENTER);
+	lblPause.setBounds(243, 74, 46, 14);
+	frame.getContentPane().add(lblPause);
+	
+	JLabel lblStop = new JLabel("Stop");
+	lblStop.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	lblStop.setHorizontalAlignment(SwingConstants.CENTER);
+	lblStop.setBounds(303, 74, 46, 14);
+	frame.getContentPane().add(lblStop);
+	
+	JLabel lblSave = new JLabel("Save");
+	lblSave.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	lblSave.setHorizontalAlignment(SwingConstants.CENTER);
+	lblSave.setBounds(363, 74, 46, 14);
+	frame.getContentPane().add(lblSave);
+	
+	JLabel lblGenerate = new JLabel("Generate");
+	lblGenerate.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	lblGenerate.setHorizontalAlignment(SwingConstants.CENTER);
+	lblGenerate.setBounds(423, 74, 46, 14);
+	frame.getContentPane().add(lblGenerate);
+	
+	JLabel lblExport = new JLabel("Export");
+	lblExport.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	lblExport.setHorizontalAlignment(SwingConstants.CENTER);
+	lblExport.setBounds(483, 74, 46, 14);
+	frame.getContentPane().add(lblExport);
 	
 	}
 
