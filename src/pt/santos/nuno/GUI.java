@@ -55,7 +55,7 @@ public class GUI implements WindowListener {
 	private final static String stopIcon = 		iconsFolder + "\\stop.png";
 	private final static String generateIcon = 	iconsFolder + "\\generate.png";
 	private final static String saveIcon = 		iconsFolder + "\\save.png";
-	private final static String exportIcon = 	iconsFolder + "\\export.png";
+	private final static String exportIcon = 	iconsFolder + "\\export2.png";
 	private final static String openIcon = 		iconsFolder + "\\open.png";
 	
 	private JFrame frame;

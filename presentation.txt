@@ -1,6 +1,12 @@
+FEATURES
 - markov nth order
 - no dependencies (all from scratch)
 - voice leading algorithm
 - configurations all in a xml file
 - patterns
 - os indenpendent
+
+LIMITATIONS
+- only one chord per bar
+- only one signature per bar
+- kind of limited in terms of modulation
