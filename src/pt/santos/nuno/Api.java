@@ -276,7 +276,7 @@ public class Api implements MetaEventListener {
 		this.bpm = bpm;
 	}
 
-	public static void loadSongs() {				
+	public void loadSongs() {				
 		for (Song song : songs) {										
 			for (ChordProg chord : song.progression) {
 				int function = chord.getNote(0).getFunction(song.getKey());
