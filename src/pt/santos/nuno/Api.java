@@ -272,8 +272,9 @@ public class Api implements MetaEventListener {
 		sequencer.start();
 	}
 
-	public void setBPM(int bpm) {
+	public void setBPM(int bpm) {		
 		this.bpm = bpm;
+		sequencer.setTempoInBPM(bpm);
 	}
 
 	public void loadSongs() {				
