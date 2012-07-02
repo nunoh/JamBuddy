@@ -83,7 +83,7 @@ public class GUI implements WindowListener {
 	Progression prog;
 	private boolean paused = false;
 	private static Api app;
-	
+
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -240,12 +240,12 @@ public class GUI implements WindowListener {
 		//			tfs[i] = tf;
 		//		}
 
-//		//TODO
-//		for (int i = 0; i < tfs.length; i++) {
-//			JTextField tf = tfs[i];
-//			if (tf != null)
-//				panelChords.add(tf);
-//		}
+		//		//TODO
+		//		for (int i = 0; i < tfs.length; i++) {
+		//			JTextField tf = tfs[i];
+		//			if (tf != null)
+		//				panelChords.add(tf);
+		//		}
 
 		// PLAY
 		JButton btnPlay = new JButton("");
@@ -312,18 +312,22 @@ public class GUI implements WindowListener {
 		btnSave.setIcon(new ImageIcon(saveIcon));
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				if (!containsChords()) {
 					JOptionPane.showMessageDialog(frame, "nothing to save...");
 					return;
 				}
 
 				ArrayList<String> chords = new ArrayList<String>();
-				for (int i = 0; i < tfs.length; i++) {
-					if (tfs[i] != null && !tfs[i].getText().equals("")) {
-						chords.add(tfs[i].getText());
+				for (int i = 0; i < tableModel.getRowCount(); i++) {
+					for (int j = 0; j < tableModel.getColumnCount(); j++) {
+						String s = (String) tableModel.getValueAt(i, j);
+						if (s != null) {
+							chords.add(s);
+						}
 					}
 				}
-
+				
 				int rval = fileChooser.showSaveDialog(frame);
 				if (rval == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();								
@@ -365,15 +369,19 @@ public class GUI implements WindowListener {
 		btnGenerate.setBounds(232, 21, 50, 50);
 		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < 4; i++) {
-					String next = app.markov.getNext();
-					Chord c = app.getMarkovChord(next);				
-					JTextField tf = tfs[i];
-					int p = c.getRoot();
-					String let = Note.getLetter(p);
-					tf.setText(let + c.getDef());
+				int rows = 2;
+				int cols = 4;
+				for (int i = 0; i < rows; i++) {
+					for (int j = 0; j < cols; j++) {					
+						String next = app.markov.getNext();
+						Chord c = app.getMarkovChord(next);
+						int p = c.getRoot();
+						String let = Note.getLetter(p);
+						String sChord = let + c.getDef();
+						tableModel.setValueAt(sChord, i, j);
+					}
 				}
-			}
+			}						 
 		});
 		frame.getContentPane().add(btnGenerate);
 		btnSave.setBounds(292, 21, 50, 50);
@@ -411,17 +419,22 @@ public class GUI implements WindowListener {
 
 					System.out.println(sProg);
 
-					JOptionPane.showMessageDialog(frame, "song progression is " + sProg);
-
 					String tokens[] = sProg.split("\\" + Api.CHORDS_DELIMITER);
+					
 					for (int i = 1; i < tokens.length; i++) {
 						String token = tokens[i].trim();
-						tfs[i-1].setText(token);
+						setChord(i-1, token);
 					}
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 				}
+			}
+
+			private void setChord(int i, String s) {
+				int row = i / tableModel.getColumnCount();
+				int col = i % tableModel.getRowCount();
+				tableModel.setValueAt(s, row, col);
 			}
 		});
 		btnOpen.setBounds(412, 21, 50, 50);
@@ -493,20 +506,20 @@ public class GUI implements WindowListener {
 		lblOpen.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblOpen.setBounds(414, 74, 46, 14);
 		frame.getContentPane().add(lblOpen);
-		
+
 		// TABLE
 		table = new JTable();
 		tableModel = new DefaultTableModel(new String[]{"", "", "", ""}, DEFAULT_TABLE_ROWS);
 		table.setModel(tableModel);
 		table.setTableHeader(null);
 		table.setRowHeight(tableRowHeight);
-		
+
 		// SCROLL PANE
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(48, 110, 317, 198);
 		scrollPane.setViewportView(table);
 		frame.getContentPane().add(scrollPane);				
-		
+
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -515,13 +528,24 @@ public class GUI implements WindowListener {
 		});
 		btnAdd.setBounds(10, 334, 89, 23);
 		frame.getContentPane().add(btnAdd);
+		
+		JButton btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (int i = 0; i < tableModel.getRowCount(); i++)
+					for (int j = 0; j < tableModel.getColumnCount(); j++)
+						tableModel.setValueAt(null, i, j);
+			}
+		});
+		btnClear.setBounds(11, 362, 89, 23);
+		frame.getContentPane().add(btnClear);
 
 	}
 
 	public void buildProgression() {
 
 		prog = new Progression();	
-		
+
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
 			for (int j = 0; j < tableModel.getColumnCount(); j++) {
 				String s = (String) tableModel.getValueAt(i, j);
@@ -541,13 +565,12 @@ public class GUI implements WindowListener {
 	}
 
 	public boolean containsChords() {
-		for (int i = 0; i < tfs.length; i++) {
-			JTextField tf = tfs[i];
-			if (tf != null) {
-				String txt = tfs[i].getText();
-				if (!txt.equals(""))
+		for (int i = 0; i < tableModel.getRowCount(); i++) {
+			for (int j = 0; j < tableModel.getColumnCount(); j++) {
+				String s = (String) tableModel.getValueAt(i, j);
+				if (s != null)
 					return true;
-			}			
+			}
 		}
 		return false;
 	}
