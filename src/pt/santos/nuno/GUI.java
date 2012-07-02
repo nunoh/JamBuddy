@@ -167,32 +167,33 @@ public class GUI implements WindowListener {
 		btnPlay.setBounds(17, 21, 32, 32);
 		frame.getContentPane().add(btnPlay);
 		btnPlay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {				
-
+			public void actionPerformed(ActionEvent e) {
+				
 				if (paused) {
-					Api.sequencer.start();
 					paused = false;
+					app.resume();					
 					return;
 				}
-
-				buildProgression();
-
+				
 				// bpms
 				int bpm = (Integer) spnBPM.getValue();
 				app.setBPM(bpm);
 
+				buildProgression();
+
 				// loop count
 				if (cbLoop.isSelected()) {
-					Api.sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+					app.sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
 				}
 
 				else {
 					int iLoopCount = (Integer) spnLoopCount.getValue(); 
-					Api.sequencer.setLoopCount(iLoopCount);
+					app.sequencer.setLoopCount(iLoopCount);
 				}
 
 				// actually play
-				app.playProgression();
+				System.out.println(app.bpm);
+				app.play();
 			}
 		});
 	}
@@ -214,7 +215,7 @@ public class GUI implements WindowListener {
 					File file = fileChooser.getSelectedFile();				
 					try {
 						buildProgression();
-						MidiSystem.write(Api.sequence, 1, file);
+						MidiSystem.write(app.sequence, 1, file);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -267,9 +268,9 @@ public class GUI implements WindowListener {
 		btnPause.setIcon(new ImageIcon(pauseIcon));
 		btnPause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (Api.sequencer.isOpen()) {
+				if (app.sequencer.isOpen()) {
 					paused = true;
-					Api.sequencer.stop();
+					app.pause();
 				}
 			}
 		});
@@ -284,8 +285,8 @@ public class GUI implements WindowListener {
 		btnStop.setIcon(new ImageIcon(stopIcon));
 		btnStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (Api.sequencer.isOpen()) {
-					Api.sequencer.stop();
+				if (app.sequencer.isOpen()) {
+					app.sequencer.stop();
 				}
 			}
 		});
@@ -305,7 +306,7 @@ public class GUI implements WindowListener {
 				int cols = DEFAULT_TABLE_COLUMNS;
 				for (int i = 0; i < rows; i++) {
 					for (int j = 0; j < cols; j++) {					
-						String next = Api.markov.getNext();
+						String next = app.markov.getNext();
 						Chord c = app.getMarkovChord(next);
 						int p = c.getRoot();
 						String let = Note.getLetter(p);
@@ -436,6 +437,10 @@ public class GUI implements WindowListener {
 		lblKey.setBounds(50, 95, 32, 14);
 		frame.getContentPane().add(lblKey);
 		
+		JLabel lblLoop = new JLabel("Loop");
+		lblLoop.setBounds(213, 120, 67, 14);
+		frame.getContentPane().add(lblLoop);
+		
 	}
 
 	private void buildTable() {
@@ -539,7 +544,7 @@ public class GUI implements WindowListener {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox)e.getSource();
 				String sPattern = (String)cb.getSelectedItem();
-				Api.pattern = new Pattern(sPattern);
+				app.pattern = new Pattern(sPattern);
 			}		
 		});
 

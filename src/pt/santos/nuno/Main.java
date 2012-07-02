@@ -41,7 +41,7 @@ public class Main {
 		app.setBPM(100);
 
 		app.setProgression(s.progression);
-		app.playProgression();
+		app.play();
 
 		app.closeMidiDevice();
 	}
@@ -60,7 +60,7 @@ public class Main {
 		app.setBPM(100);
 	
 		app.setProgression(prog);
-		app.playProgression();
+		app.play();
 
 		app.closeMidiDevice();
 	}

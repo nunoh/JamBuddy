@@ -44,20 +44,19 @@ public class Api implements MetaEventListener {
 	private static ArrayList<ChordDef> chords;
 	private static ArrayList<Pattern> patterns;
 	private static ArrayList<Song> songs;
+	
+	public static Pattern pattern;
 
 	// public static 
-	public static MidiDevice midiDevice;
-	public static Receiver receiver;
-	public static Sequencer sequencer;
-	public static Sequence sequence;
-	public static Track track;	
-	public static Pattern pattern;
-	public static Markov markov;
-
-	// public non static
+	public MidiDevice midiDevice;
+	public Receiver receiver;
+	public Sequencer sequencer;
+	public Sequence sequence;
+	public Track track;		
+	public Markov markov;
 	public Progression progression;
 	public int bpm;
-	public int key;			
+	public int key;	
 
 	public Api() {
 
@@ -76,8 +75,6 @@ public class Api implements MetaEventListener {
 
 		sequencer.addMetaEventListener(this);
 		track = sequence.createTrack();
-
-		bpm = DEFAULT_SEQUENCE_BPM;
 
 		markov = new Markov(1);
 
@@ -197,7 +194,7 @@ public class Api implements MetaEventListener {
 		return null;
 	}
 
-	public static void chooseMidiDevice() {		
+	public void chooseMidiDevice() {		
 		Utils.printMidiDevices();		
 		System.out.print("? ");		
 		String sDevice = Utils.readLine();
@@ -205,11 +202,11 @@ public class Api implements MetaEventListener {
 		System.out.println("device chosen is '" + midiDevice.getDeviceInfo().getName() + "'");		
 	}
 
-	public static MidiDevice getMidiDevice() {
+	public MidiDevice getMidiDevice() {
 		return midiDevice;
 	}
 
-	public static Receiver getReceiver() {
+	public Receiver getReceiver() {
 		return receiver;
 	}
 
@@ -243,7 +240,7 @@ public class Api implements MetaEventListener {
 		this.progression = prog;		
 	}
 
-	public void playProgression() {
+	public void play() {
 
 		if (progression == null) {
 			System.err.println("error: no progression to play");
@@ -268,13 +265,11 @@ public class Api implements MetaEventListener {
 		}
 
 		sequencer.setTempoInBPM(bpm);
-		System.out.println("playing at 2 " + sequencer.getTempoInBPM());
 		sequencer.start();
 	}
 
 	public void setBPM(int bpm) {		
 		this.bpm = bpm;
-		sequencer.setTempoInBPM(bpm);
 	}
 
 	public void loadSongs() {				
@@ -289,7 +284,7 @@ public class Api implements MetaEventListener {
 	}
 
 	public void setPattern(Pattern pattern) {
-		Api.pattern = pattern;
+		this.pattern = pattern;
 	}
 
 	public Chord getMarkovChord(String str) {
@@ -326,7 +321,7 @@ public class Api implements MetaEventListener {
 			}
 				
 			em.appendChild(doc.createTextNode(data));
-			rootElement.appendChild(em);
+			rootElement.appendChild(em); 
 
 			// save to file
 			TransformerFactory tff = TransformerFactory.newInstance();
@@ -338,6 +333,17 @@ public class Api implements MetaEventListener {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void resume() {
+//		System.out.println("before " + bpm + " " + sequencer.getTempoInBPM());
+//		sequencer.setTempoInBPM(bpm);
+//		System.out.println("after " + bpm + " " + sequencer.getTempoInBPM());
+		sequencer.start();
+	}
+
+	public void pause() {
+		sequencer.stop();		
 	}
 
 }
