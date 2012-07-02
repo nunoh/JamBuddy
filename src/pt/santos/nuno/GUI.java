@@ -71,7 +71,6 @@ public class GUI implements WindowListener {
 	private JFileChooser fileChooser;
 	private JTable table;
 	private DefaultTableModel tableModel;
-	private SpinnerModel sm;
 	
 	// other
 	private static Api app;
@@ -152,10 +151,6 @@ public class GUI implements WindowListener {
 	}
 
 	private void build() {
-
-		//TODO
-		sm = new SpinnerNumberModel(Api.DEFAULT_SEQUENCE_BPM, 20, 200, 1);
-
 		patterns = new String[app.getPatterns().size()];
 		for (int i = 0; i < app.getPatterns().size(); i++) {
 			Pattern p = app.getPatterns().get(i);
@@ -528,6 +523,7 @@ public class GUI implements WindowListener {
 	}
 	
 	private void buildBPM() {
+		SpinnerNumberModel sm = new SpinnerNumberModel(Api.DEFAULT_SEQUENCE_BPM, 20, 200, 1);
 		spnBPM = new JSpinner(sm);
 		spnBPM.setBounds(103, 117, 46, 20);
 		frame.getContentPane().add(spnBPM);		
