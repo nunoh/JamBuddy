@@ -521,37 +521,23 @@ public class GUI implements WindowListener {
 	public void buildProgression() {
 
 		prog = new Progression();	
-
-		// build progression
-		for (int i = 0; i < tfs.length; i++) {
-			JTextField tf = tfs[i];
-			if (tf != null) {
-				buildProgressionChord(tf);
+		
+		for (int i = 0; i < tableModel.getRowCount(); i++) {
+			for (int j = 0; j < tableModel.getColumnCount(); j++) {
+				String s = (String) tableModel.getValueAt(i, j);
+				if (s != null) {					
+					try {
+						Chord c = new Chord(s);					
+						prog.addChord(c);
+					}
+					catch (Exception exc) {
+						exc.printStackTrace();
+					}
+				}
 			}
 		}
 
 		app.setProgression(prog);
-	}
-
-	public void buildProgressionChord(JTextField tf) {
-
-		String txt = tf.getText();
-
-		if (txt.equals("")) {
-			tf.setBackground(Color.WHITE);
-		}
-
-		else {
-			try {
-				Chord c = new Chord(txt);					
-				prog.addChord(c);
-				tf.setBackground(Color.WHITE);
-			}
-			catch (Exception exc) {
-				exc.printStackTrace();
-				tf.setBackground(Color.red);
-			}
-		}
 	}
 
 	public boolean containsChords() {
