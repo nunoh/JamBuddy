@@ -3,7 +3,6 @@ package pt.santos.nuno;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -23,13 +22,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -44,10 +46,13 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class GUI implements WindowListener {
 
+	private static final int DEFAULT_TABLE_ROWS = 4;
 	// string arrays
 	private final static String[] keys = { "C", "D", "E", "F", "G", "A", "B" };
 	private final static String[] accidentals = { "b", " ", "#" };	
 	private final static String iconsFolder = 	"icons";
+	private final static int tableRowHeight = 40;
+	private final static String[] tableColumns = {"Foo", "Bar"};
 
 	// button icons	
 	private final static String playIcon = 		iconsFolder + "\\play2.png";
@@ -57,7 +62,7 @@ public class GUI implements WindowListener {
 	private final static String saveIcon = 		iconsFolder + "\\save.png";
 	private final static String exportIcon = 	iconsFolder + "\\export2.png";
 	private final static String openIcon = 		iconsFolder + "\\open.png";
-	
+
 	private JFrame frame;
 	private JTextField tfs[];
 	private JSpinner spnBPM;
@@ -69,13 +74,16 @@ public class GUI implements WindowListener {
 	private JLabel lblKey;
 	private JLabel lblBpm;
 	private JLabel lblPattern;
-	private JPanel panelChords;
+	private JScrollPane scrollPane; 
 	private JFileChooser fileChooser;
 	private JFileChooser fcOpen;
-	
+	private JTable table;
+	private DefaultTableModel tableModel;
+
 	Progression prog;
 	private boolean paused = false;
 	private static Api app;
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -87,8 +95,9 @@ public class GUI implements WindowListener {
 					app.openMidiDevice();
 
 					GUI window = new GUI();
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					window.frame.setVisible(true);
-					//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -182,7 +191,7 @@ public class GUI implements WindowListener {
 			}
 		});
 		cbbAccidentals.setSelectedIndex(1);
-		panelToolbar.add(cbbAccidentals, "10, 2, fill, center");
+		panelToolbar.add(cbbAccidentals, "9, 2, 2, 1, fill, center");
 
 		// BPM
 		lblBpm = new JLabel("BPM");
@@ -223,25 +232,20 @@ public class GUI implements WindowListener {
 		spnLoopCount = new JSpinner();
 		panelToolbar.add(spnLoopCount, "10, 10");
 
-		// CHORDS
-		JPanel panelChords = new JPanel();
-		panelChords.setBounds(52, 118, 300, 100);
-		frame.getContentPane().add(panelChords);
-		panelChords.setLayout(new GridLayout(4, 4, 1, 1));
-
 		tfs = new JTextField[20];
 
-		for (int i = 0; i < 16; i++) {
-			JTextField tf = new JTextField();
-			tf.setHorizontalAlignment(SwingConstants.CENTER);
-			tfs[i] = tf;
-		}
+		//		for (int i = 0; i < 16; i++) {
+		//			JTextField tf = new JTextField();
+		//			tf.setHorizontalAlignment(SwingConstants.CENTER);
+		//			tfs[i] = tf;
+		//		}
 
-		for (int i = 0; i < tfs.length; i++) {
-			JTextField tf = tfs[i];
-			if (tf != null)
-				panelChords.add(tf);
-		}
+//		//TODO
+//		for (int i = 0; i < tfs.length; i++) {
+//			JTextField tf = tfs[i];
+//			if (tf != null)
+//				panelChords.add(tf);
+//		}
 
 		// PLAY
 		JButton btnPlay = new JButton("");
@@ -250,11 +254,13 @@ public class GUI implements WindowListener {
 		frame.getContentPane().add(btnPlay);
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
+
 				if (paused) {
 					Api.sequencer.start();
+					paused = false;
 					return;
 				}
-				
+
 				buildProgression();
 
 				// bpms
@@ -287,11 +293,12 @@ public class GUI implements WindowListener {
 					JOptionPane.showMessageDialog(frame, "Nothing to export...");	
 					return;
 				}
-				
+
 				int rval = fileChooser.showSaveDialog(frame);
 				if (rval == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();				
 					try {
+						buildProgression();
 						MidiSystem.write(app.sequence, 1, file);
 					} catch (IOException e1) {
 						e1.printStackTrace();
@@ -299,9 +306,6 @@ public class GUI implements WindowListener {
 				}
 			}
 		});
-
-		btnExport.setBounds(352, 21, 50, 50);
-		frame.getContentPane().add(btnExport);
 
 		// SAVE
 		JButton btnSave = new JButton("");
@@ -312,14 +316,14 @@ public class GUI implements WindowListener {
 					JOptionPane.showMessageDialog(frame, "nothing to save...");
 					return;
 				}
-				
+
 				ArrayList<String> chords = new ArrayList<String>();
 				for (int i = 0; i < tfs.length; i++) {
 					if (tfs[i] != null && !tfs[i].getText().equals("")) {
 						chords.add(tfs[i].getText());
 					}
 				}
-				
+
 				int rval = fileChooser.showSaveDialog(frame);
 				if (rval == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();								
@@ -327,9 +331,57 @@ public class GUI implements WindowListener {
 				}
 			}			
 		});
+
+		// PAUSE
+		JButton btnPause = new JButton("");
+		btnPause.setIcon(new ImageIcon(pauseIcon));
+		btnPause.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (Api.sequencer.isOpen()) {
+					paused = true;
+					Api.sequencer.stop();
+				}
+			}
+		});
+		btnPause.setBounds(112, 21, 50, 50);
+		frame.getContentPane().add(btnPause);
+
+		// STOP
+		JButton btnStop = new JButton("");
+		btnStop.setIcon(new ImageIcon(stopIcon));
+		btnStop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (Api.sequencer.isOpen()) {
+					Api.sequencer.stop();
+				}
+			}
+		});
+		btnStop.setBounds(172, 21, 50, 50);
+		frame.getContentPane().add(btnStop);
+
+		// GENERATE
+		JButton btnGenerate = new JButton("");
+		btnGenerate.setIcon(new ImageIcon(generateIcon));
+		btnGenerate.setBounds(232, 21, 50, 50);
+		btnGenerate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (int i = 0; i < 4; i++) {
+					String next = app.markov.getNext();
+					Chord c = app.getMarkovChord(next);				
+					JTextField tf = tfs[i];
+					int p = c.getRoot();
+					String let = Note.getLetter(p);
+					tf.setText(let + c.getDef());
+				}
+			}
+		});
+		frame.getContentPane().add(btnGenerate);
 		btnSave.setBounds(292, 21, 50, 50);
 		frame.getContentPane().add(btnSave);
-		
+
+		btnExport.setBounds(352, 21, 50, 50);
+		frame.getContentPane().add(btnExport);
+
 		// OPEN
 		JButton btnOpen = new JButton("");
 		btnOpen.setIcon(new ImageIcon(openIcon));
@@ -341,7 +393,7 @@ public class GUI implements WindowListener {
 					loadSong(file);
 				}
 			}
-			
+
 			private void loadSong(File file) {
 				try {
 					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -356,11 +408,11 @@ public class GUI implements WindowListener {
 					String key = elem.getAttribute("key");
 					String sProg = elem.getTextContent();
 					sProg = sProg.substring(sProg.indexOf(Api.CHORDS_DELIMITER), sProg.lastIndexOf(Api.CHORDS_DELIMITER)+1);
-					
+
 					System.out.println(sProg);
-					
+
 					JOptionPane.showMessageDialog(frame, "song progression is " + sProg);
-					
+
 					String tokens[] = sProg.split("\\" + Api.CHORDS_DELIMITER);
 					for (int i = 1; i < tokens.length; i++) {
 						String token = tokens[i].trim();
@@ -394,56 +446,11 @@ public class GUI implements WindowListener {
 		slHarmonic.setBounds(273, 408, 200, 23);
 		frame.getContentPane().add(slHarmonic);
 
-		// GENERATE
-		JButton btnGenerate = new JButton("");
-		btnGenerate.setIcon(new ImageIcon(generateIcon));
-		btnGenerate.setBounds(232, 21, 50, 50);
-		btnGenerate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < 4; i++) {
-					String next = app.markov.getNext();
-					Chord c = app.getMarkovChord(next);				
-					JTextField tf = tfs[i];
-					int p = c.getRoot();
-					String let = Note.getLetter(p);
-					tf.setText(let + c.getDef());
-				}
-			}
-		});
-		frame.getContentPane().add(btnGenerate);
-
-		// STOP
-		JButton btnStop = new JButton("");
-		btnStop.setIcon(new ImageIcon(stopIcon));
-		btnStop.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (Api.sequencer.isOpen()) {
-					Api.sequencer.stop();
-				}
-			}
-		});
-		btnStop.setBounds(172, 21, 50, 50);
-		frame.getContentPane().add(btnStop);
-
-		// PAUSE
-		JButton btnPause = new JButton("");
-		btnPause.setIcon(new ImageIcon(pauseIcon));
-		btnPause.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (Api.sequencer.isOpen()) {
-					paused = true;
-					Api.sequencer.stop();
-				}
-			}
-		});
-		btnPause.setBounds(112, 21, 50, 50);
-		frame.getContentPane().add(btnPause);
-
 		JSlider slider = new JSlider();
 		slider.setOrientation(SwingConstants.VERTICAL);
-		slider.setBounds(23, 217, 55, 146);
+		slider.setBounds(490, 285, 55, 146);
 		frame.getContentPane().add(slider);
-		
+
 		// LABELS
 		JLabel lblPlay = new JLabel("Play");
 		lblPlay.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -480,17 +487,39 @@ public class GUI implements WindowListener {
 		lblExport.setHorizontalAlignment(SwingConstants.CENTER);
 		lblExport.setBounds(354, 74, 46, 14);
 		frame.getContentPane().add(lblExport);
-			
+
 		JLabel lblOpen = new JLabel("Open");
 		lblOpen.setHorizontalAlignment(SwingConstants.CENTER);
 		lblOpen.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblOpen.setBounds(414, 74, 46, 14);
 		frame.getContentPane().add(lblOpen);
+		
+		// TABLE
+		table = new JTable();
+		tableModel = new DefaultTableModel(new String[]{"", "", "", ""}, DEFAULT_TABLE_ROWS);
+		table.setModel(tableModel);
+		table.setTableHeader(null);
+		table.setRowHeight(tableRowHeight);
+		
+		// SCROLL PANE
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(48, 110, 317, 198);
+		scrollPane.setViewportView(table);
+		frame.getContentPane().add(scrollPane);				
+		
+		JButton btnAdd = new JButton("Add");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableModel.addRow(new String[]{"", "", "", ""});
+			}
+		});
+		btnAdd.setBounds(10, 334, 89, 23);
+		frame.getContentPane().add(btnAdd);
 
 	}
-	
+
 	public void buildProgression() {
-		
+
 		prog = new Progression();	
 
 		// build progression
@@ -500,14 +529,14 @@ public class GUI implements WindowListener {
 				buildProgressionChord(tf);
 			}
 		}
-		
+
 		app.setProgression(prog);
 	}
-	
+
 	public void buildProgressionChord(JTextField tf) {
-		
+
 		String txt = tf.getText();
-		
+
 		if (txt.equals("")) {
 			tf.setBackground(Color.WHITE);
 		}

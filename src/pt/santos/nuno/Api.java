@@ -267,7 +267,8 @@ public class Api implements MetaEventListener {
 			e.printStackTrace();
 		}
 
-		sequencer.setTempoInBPM(bpm);		
+		sequencer.setTempoInBPM(bpm);
+		System.out.println("playing at 2 " + sequencer.getTempoInBPM());
 		sequencer.start();
 	}
 
