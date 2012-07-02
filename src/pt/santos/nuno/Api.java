@@ -36,7 +36,7 @@ public class Api implements MetaEventListener {
 	public static final int DEFAULT_NOTE_VELOCITY = 80;
 	public static final int DEFAULT_MIDI_DEVICE = 2;
 	public static final int DEFAULT_PPQ_TICKS = 1;
-	public static final int DEFAULT_SEQUENCE_BPM = 150;
+	public static final int DEFAULT_SEQUENCE_BPM = 200;
 	public static final int DEFAULT_KEY = 0; // C
 	public static final int DEFAULT_PATTERN = 0; // UP	
 
@@ -268,8 +268,9 @@ public class Api implements MetaEventListener {
 		sequencer.start();
 	}
 
-	public void setBPM(int bpm) {		
+	public void setBPM(int bpm) {
 		this.bpm = bpm;
+		sequencer.setTempoInBPM(bpm);
 	}
 
 	public void loadSongs() {				
@@ -336,9 +337,6 @@ public class Api implements MetaEventListener {
 	}
 
 	public void resume() {
-//		System.out.println("before " + bpm + " " + sequencer.getTempoInBPM());
-//		sequencer.setTempoInBPM(bpm);
-//		System.out.println("after " + bpm + " " + sequencer.getTempoInBPM());
 		sequencer.start();
 	}
 

@@ -178,7 +178,7 @@ public class GUI implements WindowListener {
 				// bpms
 				int bpm = (Integer) spnBPM.getValue();
 				app.setBPM(bpm);
-
+				
 				buildProgression();
 
 				// loop count
@@ -192,7 +192,6 @@ public class GUI implements WindowListener {
 				}
 
 				// actually play
-				System.out.println(app.bpm);
 				app.play();
 			}
 		});
@@ -206,7 +205,7 @@ public class GUI implements WindowListener {
 			public void actionPerformed(ActionEvent e) {
 
 				if (!containsChords()) {
-					JOptionPane.showMessageDialog(frame, "Nothing to export...");	
+					JOptionPane.showMessageDialog(frame, "nothing to export...");	
 					return;
 				}
 
@@ -268,8 +267,7 @@ public class GUI implements WindowListener {
 		btnPause.setIcon(new ImageIcon(pauseIcon));
 		btnPause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (app.sequencer.isOpen()) {
-					paused = true;
+				if (app.sequencer.isRunning()) {
 					app.pause();
 				}
 			}
@@ -285,7 +283,7 @@ public class GUI implements WindowListener {
 		btnStop.setIcon(new ImageIcon(stopIcon));
 		btnStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (app.sequencer.isOpen()) {
+				if (app.sequencer.isRunning()) {
 					app.sequencer.stop();
 				}
 			}
