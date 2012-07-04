@@ -2,11 +2,20 @@ TODO
 - key accidentals
 - definir ui final
 - carregar mais patterns
-- carregar mais songs
 - por 1o acorde em funcao da key
 - keyboard shortcuts
 - markov ordem 2 e 3
-- mostrar o acorde que est√° a ser tocado
+- mostrar o acorde que est· a ser tocado
 
 DONE
 - resolver bug bpm
+- carregar mais songs
+
+KNOWN BUGS
+- % no inicio da linha nao funciona
+- % encadeados nao funciona (C7|%|%)
+- C7(b9) n„o sei se funciona. C7b9, funciona, mas o outro tambem nao devo erro a fazer parse
+- in configuration file, the chord C-(maj7) is notated as C-maj7
+
+FUTURE WORK
+- incorporar mais sistemas de notacao para ficheiro de configuracao (-7 E min7, por ex.)

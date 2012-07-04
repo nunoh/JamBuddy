@@ -30,7 +30,8 @@ public class Api implements MetaEventListener {
 
 	// constants
 	public static final String PATH_XML_CONFIG = "src/config.xml";
-	public static final String CHORDS_DELIMITER = "|";
+	public static final String CHORDS_DELIMITER = "|";	
+	public static final String CHORD_PREVIOUS_SYMBOL = "%";
 
 	// defaults
 	public static final int DEFAULT_NOTE_VELOCITY = 80;
@@ -38,7 +39,7 @@ public class Api implements MetaEventListener {
 	public static final int DEFAULT_PPQ_TICKS = 1;
 	public static final int DEFAULT_SEQUENCE_BPM = 200;
 	public static final int DEFAULT_KEY = 0; // C
-	public static final int DEFAULT_PATTERN = 0; // UP	
+	public static final int DEFAULT_PATTERN = 0; // UP
 
 	// private
 	private static ArrayList<ChordDef> chords;
@@ -135,7 +136,6 @@ public class Api implements MetaEventListener {
 			// parsing songs
 			for (int i = 0; i < songsNode.getLength(); i++) {
 				Element elem = (Element) songsNode.item(i);
-				int id = Integer.parseInt(elem.getAttribute("id"));
 				String name = elem.getAttribute("name");
 				String genre = elem.getAttribute("genre");
 				String measure = elem.getAttribute("measure");
@@ -148,12 +148,12 @@ public class Api implements MetaEventListener {
 					int idx = line.indexOf(CHORDS_DELIMITER);
 					if (idx != -1) {
 						line = line.substring(idx, line.lastIndexOf(CHORDS_DELIMITER)+1);
-						System.out.println(line);
+//						System.out.println(line);
 						lines[j] = line;
 					}				
 				}
 								
-				songs.add(new Song(id, name, genre, measure, key, lines));
+				songs.add(new Song(name, genre, measure, key, lines));
 			}
 
 		}
@@ -318,8 +318,9 @@ public class Api implements MetaEventListener {
 		try {
 			DocumentBuilderFactory dbf =  DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+			dbf.setIgnoringComments(true);
 			Document doc = documentBuilder.newDocument();
-
+			
 			Element rootElement = doc.createElement(root);
 			doc.appendChild(rootElement);
 

@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.sound.midi.Track;
 
+import org.w3c.dom.Element;
+
 /*
  * A progression has many chordprogs (with a number of bars and pattern)
  * and 
@@ -37,16 +39,29 @@ public class Progression implements Iterable<ChordProg> {
 	private void handleProgressionLine(String progression) {
 		String tokens[] = progression.split("\\" + Api.CHORDS_DELIMITER);
 		for (int i = 1; i < tokens.length; i++) {
+			
 			String token = tokens[i].trim();
-			if (token.contains(" ")) {
-				String chords12[] = token.split(" ");
-				String chord1 = chords12[0];
-				String chord2 = chords12[1];
-				chords.add(new ChordProg(new Chord(chord1), 2));
-				chords.add(new ChordProg(new Chord(chord2), 2));
+			
+			if (token.equals(Api.CHORD_PREVIOUS_SYMBOL)) {
+				token = tokens[i-1];
 			}
+						
+			//TODO better support for two chords in a bar
+			if (token.contains(" ")) {
+//				String chords12[] = token.split(" ");
+//				String chord1 = chords12[0];
+//				String chord2 = chords12[1];
+//				chords.add(new ChordProg(new Chord(chord1), 2));
+//				chords.add(new ChordProg(new Chord(chord2), 2));
+			}
+
 			else { 
+				try {
 				chords.add(new ChordProg(new Chord(token), 4));
+				}
+				catch (Exception e) {
+					System.err.println("erro ao criar acorde '" + token + "'");
+				}
 			}
 		}
 	}
