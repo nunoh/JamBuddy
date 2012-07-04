@@ -12,14 +12,14 @@ public class Song  {
 	public Progression progression;
 	private String key;
 	
-	public Song(int id, String name, String genre, String measure, String key, String sProgression) {
+	public Song(int id, String name, String genre, String measure, String key, String[] progression) {
 		this.id = id;
 		this.name = name;
 		this.genre = genre;
 		this.measure = measure;
 		this.key = key;
-		this.sProgression = sProgression;
-		this.progression = new Progression(sProgression);		
+//		this.sProgression = sProgression;
+		this.progression = new Progression(progression);		
 	}
 	
 	public String getKey() {

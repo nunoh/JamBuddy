@@ -22,11 +22,20 @@ public class Progression implements Iterable<ChordProg> {
 		chords = new ArrayList<ChordProg>();
 	}
 	
-	public Progression(String sProgression) {
+	public Progression(String[] progression) {
 		
 		chords = new ArrayList<ChordProg>();
 		
-		String tokens[] = sProgression.split("\\" + Api.CHORDS_DELIMITER);
+		for (int i = 0; i < progression.length; i++) {
+			handleProgressionLine(progression[i]);
+		}			
+		
+//		System.out.println("progression is " + chords.toString());
+	}
+	
+	//TODO change chord duration from 2 and 4 constants
+	private void handleProgressionLine(String progression) {
+		String tokens[] = progression.split("\\" + Api.CHORDS_DELIMITER);
 		for (int i = 1; i < tokens.length; i++) {
 			String token = tokens[i].trim();
 			if (token.contains(" ")) {

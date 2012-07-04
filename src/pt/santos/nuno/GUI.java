@@ -151,9 +151,9 @@ public class GUI implements WindowListener {
 	}
 
 	private void build() {
-		patterns = new String[app.getPatterns().size()];
-		for (int i = 0; i < app.getPatterns().size(); i++) {
-			Pattern p = app.getPatterns().get(i);
+		patterns = new String[Api.getPatterns().size()];
+		for (int i = 0; i < Api.getPatterns().size(); i++) {
+			Pattern p = Api.getPatterns().get(i);
 			patterns[i] = p.getName();
 		}
 		

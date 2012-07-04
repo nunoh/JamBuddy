@@ -42,11 +42,24 @@ public class Chord implements Iterable<Note> {
 		this(parseChord(chord, "note"), parseChord(chord, "chord"));		
 	}
 		
+	//TODO add throw exception invalid chord
 	private static String parseChord(String chord, String param) {
+		
 		String notes = "^([CDEFGAB])";
 		String accidentals = "((?:#|##|b|bb)?)";
-		String chords = "(maj7|maj|min7|min|sus2)$"; // TODO add more chords
+//		String chords = "(maj7|maj|min7|min|sus2)$";
 		
+		String chords = "";
+		ArrayList<ChordDef> defs = Api.getChords();
+		for (int i = 0; i < defs.size(); i++) {
+			if (i == 0)
+				chords += defs.get(i).getName();
+			else
+				chords += "|" + defs.get(i).getName();
+		}
+		
+		chords = "(" + chords + ")$";
+				
 		String regex = notes + accidentals + chords; 
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(chord);		

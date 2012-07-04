@@ -141,8 +141,19 @@ public class Api implements MetaEventListener {
 				String measure = elem.getAttribute("measure");
 				String key = elem.getAttribute("key");
 				String sProg = elem.getTextContent();
-				sProg = sProg.substring(sProg.indexOf(CHORDS_DELIMITER), sProg.lastIndexOf(CHORDS_DELIMITER)+1);
-				songs.add(new Song(id, name, genre, measure, key, sProg));
+				
+				String lines[] = sProg.split("\n");
+				for (int j = 0; j < lines.length; j++) {					
+					String line = lines[j];					
+					int idx = line.indexOf(CHORDS_DELIMITER);
+					if (idx != -1) {
+						line = line.substring(idx, line.lastIndexOf(CHORDS_DELIMITER)+1);
+						System.out.println(line);
+						lines[j] = line;
+					}				
+				}
+								
+				songs.add(new Song(id, name, genre, measure, key, lines));
 			}
 
 		}
@@ -154,11 +165,11 @@ public class Api implements MetaEventListener {
 		pattern = patterns.get(DEFAULT_PATTERN);
 	}
 
-	public ArrayList<ChordDef> getChords() {
+	public static ArrayList<ChordDef> getChords() {
 		return chords;
 	}
 
-	public ArrayList<Pattern> getPatterns() {
+	public static ArrayList<Pattern> getPatterns() {
 		return patterns;
 	}
 
