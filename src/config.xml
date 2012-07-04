@@ -40,7 +40,8 @@
 	
 	<songs>
        
-	    <song name="Alice in Wonderland" genre="Jazz" measure="3/4" key="C">
+		<!-- JAZZ -->
+		<song name="Alice in Wonderland" genre="Jazz" measure="3/4" key="C">
             |D-7|G7|Cmaj7|Fmaj7|B-7b5|E7|
             |A-7|Eb7|D-7|G7|E-7|A-7|
             |D-7|G7|E-7 A-7|D-7|G7|
@@ -52,21 +53,21 @@
             |E-7|A7|D-7 A7|D-7 A7|D-7 Ab7|G7|
             |D-7|G7|Cmaj7|Fmaj7|B-7b5|
             |E7|A-7|Eb7|D-7|G7|
-            |E-7|A-7|D-7|G7|Cmaj7|Cmaj7|            
+            |E-7|A-7|D-7|G7|Cmaj7|%|            
         </song>
         
         <song name="All of Me" genre="Jazz" measure="4/4" key="C">
-            |Cmaj7|Cmaj7|E7|E7|
-            |A7|A7|D-|D-|
-            |E7|E7|A-|A-|
-            |D7|D7|D-|G7|
-            |Cmaj|Cmaj|E7|E7|
-            |A7|A7|D-|D-|
+            |Cmaj7|%|E7|%|
+            |A7|%|D-|%|
+            |E7|%|A-|%|
+            |D7|%|D-|G7|
+            |Cmaj|%|E7|%|
+            |A7|%|D-|%|
             |Fmaj|F-|Cmaj E-7|A7|
-            |D-7|G7|C6 Ebdim7|D- G7|
+            |D-7|G7|C6|
         </song>
         
-        <song name="All the Things You Are" genre="Jazz" measure="4/4" key="Ab">
+        <song name="All the Things You Are" genre="Jazz" measure="4/4" key="F-">
             |F-7|Bb-7|Eb7|Abmaj7|
             |Dbmaj7|G7|Cmaj7|%|
             |C-7|F-7|Bb7|Ebmaj7|
@@ -75,10 +76,10 @@
             |F#-7|B7|Emaj7|C7|
             |F-7|Bb-7|Eb7|Abmaj7|
             |Dbmaj7|Db-7|C-7|Bdim7|
-            |Bb-7|Eb7|Abmaj7|G7 C7|
+            |Bb-7|Eb7|Abmaj7|G7 C7|F-|
         </song>
         
-        <song name="Autumn Leaves" genre="Jazz" measure="4/4" key="E">
+        <song name="Autumn Leaves" genre="Jazz" measure="4/4" key="E-">
             |A-7|D7|Gmaj7|
             |Cmaj7|F#-7b5|B7|E-|%|
             |A-7|D7|Gmaj7|
@@ -94,7 +95,7 @@
             |%|D-7b5|G7|C-7|
             |%|Eb-7|Ab7|Dbmaj7|
             |%|D-7b5|G7|C-7|
-            |D-7b5 G7|
+            |D-7b5 G7|C-7|
         </song>
         
         <song name="Confirmation" genre="Jazz" measure="4/4" key="F">
@@ -107,10 +108,8 @@
 			|F|E-7b5 A7|D-|C-7 F7|
 			|F-7 Bb7|A-7b5|D7|G-7 C7|F|
         </song>
-        
-        
-        
-        <song name="Django" genre="Jazz" measure="4/4" key="Fm">
+              
+        <song name="Django" genre="Jazz" measure="4/4" key="F-">
             |F-|Bb-6|C7|F-|
             |F7|Bb-7|Eb7|Abmaj7|
             |Dbmaj7|C7|G7|C7|
@@ -118,7 +117,7 @@
             |F-|Bb-|C7|F7|F-|
 		</song>
 		
-        <song name="Easy To Love" genre="Jazz" measure="4/4" key="Fm">
+        <song name="Easy To Love" genre="Jazz" measure="4/4" key="C">
             |D-7|G7|D-7|G7|
             |Cmaj7|Fmaj7|E-7|F7|
             |D-7|G7|Cmaj7|A-7|
@@ -129,7 +128,7 @@
             |D-7|G7|C6|%|
         </song>              
         
-        <song name="Just Friends" genre="Jazz" measure="4/4" key="Eb">
+        <song name="Just Friends" genre="Jazz" measure="4/4" key="C">
             |Cmaj7|%|C-7|F7|
             |Gmaj7|%|Bb-7|Eb7|
             |A-7|D7|B-7|E-7|
@@ -140,7 +139,7 @@
             |A7|A-7 D7|G6|
         </song>
         
-        <song name="Lullaby of Birdland" genre="Jazz" measure="4/4" key="F-">
+        <song name="Lullaby of Birdland" genre="Jazz" measure="4/4" key="Ab">
             |F-|G7 C7|F-|Bb-7 Eb7|
             |Abmaj7 F-7|B-7 Eb7|Abmaj7|Db7 C7|
             |F-|G7 C7|F-|Bb-7 Eb7|
@@ -152,7 +151,7 @@
             |Abmaj7 Eb7|Abmaj7|
         </song>
         
-        <song name="Misty" genre="Jazz" measure="4/4" key="F-">
+        <song name="Misty" genre="Jazz" measure="4/4" key="Eb">
             |Ebmaj7|Bb-7 Eb7|Abmaj7|
             |Ab-7 Db7|Ebmaj7 C-7|F-7 Bb7|
             |G-7 C7|F-7 Bb7|
@@ -165,7 +164,7 @@
             |Ebmaj7 C-7|F-7 Bb7|Eb6|%|
         </song>
         
-        <song name="My Favorite Things" genre="Jazz" measure="4/4" key="F-">
+        <song name="My Favorite Things" genre="Jazz" measure="4/4" key="E-">
             |E-7|F#-7|E-7|F#-7|Cmaj7|
             |Cmaj7|%|%|A-7|D7|
             |Gmaj7|Cmaj7|Gmaj7|Cmaj7|F#-7b5 B7|
@@ -182,33 +181,69 @@
         </song>
         
         <song name="My Funny Valentine" genre="Jazz" measure="4/4" key="F-">
-
+            |C-|C-(maj7)|C-7|C-6|
+            |Abmaj7|F-7|D-7b5|G7b9|
+            |C-|C-(maj7)|C-7|C-6|
+            |Abmaj7|F-7|Ab-6|Bb7(b9)|
+            |Ebmaj7 F-7|G-7 F-7|Ebmaj7 F-7|G-7 F-7|
+            |Ebmaj7 G7|C- A7|Abmaj7|D-7b5 G7b9|
+            |C-|C-(maj7)|C-7|C-6|
+            |Abmaj7|D-7b5 G7b9|C-|Bb-7 A7(#11)|
+            |Abmaj7|F-7 Bb7b9|Eb6|%|
         </song>
         
-        <song name="Night and Day" genre="Jazz" measure="4/4" key="F-">
-
+        <song name="Night and Day" genre="Jazz" measure="4/4" key="C">
+			|D-7b5|G7|Cmaj7|%|
+			|D-7b5|G7|Cmaj7|%|
+			|F#-7b5|F-7|E-7|Ebdim7|
+			|D-7|G7|Cmaj7|%|
+			|D-7b5|G7|Cmaj7|%|
+			|D-7b5|G7|Cmaj7|%|
+			|F#-7b5|F-7|E-7|Ebdim7|
+			|D-7|G7|Cmaj7|Bb7|
+			|Ebmaj7|%|Cmaj7|%|
+			|Ebmaj7|%|Cmaj7|%|
+			|F#-7b5|F-7|E-7|Ebdim7|
+			|D-7|G7 D-7|C6|%|            
         </song>
         
-       
-        
-        <song name="Satin Doll" genre="Jazz" measure="4/4" key="F-">
-
+        <song name="Satin Doll" genre="Jazz" measure="4/4" key="C">
+			|D-7|G7|D-7|G7|E-7|A7|
+			|E-7|A7|A-7|D7|Ab-7|Db7|
+			|C|E-7b5 Ab7b9|
+			|D-7|G7|D-7|G7|E-7|A7|
+			|E-7|A7|A-7|D7|Ab-7|Db7|
+			|C D-7|D#dim7 E-7|
+			|G-7 C7|G-7 C7|Fmaj7|G-7 C7|
+			|A-7 D7|A-7 D7|D-7 G7|E-7 A7|
+			|D-7 G7|D-7 G7|E-7 A7|E-7 A7|
+			|A-7 D7|Ab-7 Db7|C|%|
         </song>
         
-        <song name="Someday My Prince Will Come" genre="Jazz" measure="4/4" key="F-">
-
+        <song name="Someday My Prince Will Come" genre="Jazz" measure="4/4" key="Bb">
+			|Bbmaj7|D7#5|Ebmaj7|G7|
+			|C-7|G7|C7|F7|
+			|D-7|C#dim|C-7|F7|
+			|D-7|Dbdim7|C-7|F7|
+			|Bbmaj7|D7#5|Ebmaj7|G7|
+			|C-7|G7|C7|F7|
+			|F-7|Bb7|Eb|Edim|
+			|Bb|C-7 F7|Bb|%|
         </song>
         
-        <song name="Take the 'A' Train" genre="Jazz" measure="4/4" key="F-">
-
+        <song name="Take the 'A' Train" genre="Jazz" measure="4/4" key="C">
+			|C|%|D7b5|%|
+			|D-7|G7|C|%|
+			|C|%|D7b5|%|
+			|D-7|G7|C|%|
+			|F|%|%|%|
+			|D7|%|D-7|G7|G7b9|
+			|C|%|D7b5|%|
+			|D-7|G7|C|%|
         </song>
-                
-        <song name="Summertime" genre="Jazz" measure="4/4" key="F-">
-
-        </song>
-         
+                         
         <!-- BOSSA NOVA -->
-        <song name="Bossa Nova" genre="Bossa Nova" measure="4/4" key="F">
+        <song name="Desafinado" genre="Bossa Nova" measure="4/4" key="F">
             |Fmaj7|%|G7b5|%|
             |G-7|C7|A-7b5|D7b9|
             |G-7|A7b9|D7|D7b9|
@@ -228,7 +263,7 @@
             |G7|C7|F6|%|
         </song>
         
-         <song name="Girl From Ipanema" genre="Bossa Nova" measure="4/4" key="Fm">
+         <song name="Girl From Ipanema" genre="Bossa Nova" measure="4/4" key="F">
             |Fmaj7|%|G7|%|
             |G-7|Gb7|Fmaj7|Gb7|
             |Fmaj7|%|G7|%|
@@ -242,16 +277,41 @@
             |Fmaj7|Gb7|
         </song>
         
-		<song name="One Note Samba" genre="Bossa Nova" measure="4/4" key="F-">
-
+		<song name="One Note Samba" genre="Bossa Nova" measure="4/4" key="Bb">
+			|D-7|Db7|C-7|B7(b5)|
+			|D-7|Db7|C-7|B7(b5)|
+			|F-7|Bb7|Ebmaj7|Ab7|
+			|D-7|Db7|C-7 Bb7(b5)|Bb6|
+			|Eb-7|Ab7|Dbmaj7|%|
+			|Db-7|Gb7|Cbmaj7|C-7b5 B7b5|
+			|F-7|Bb7|Ebmaj7|Ab7|
+			|Db6|C7|Bmaj7|Bb6|
         </song>
-        
-        <song name="Wave" genre="Bossa Nova" measure="4/4" key="F-">
-
-        </song>
-        
+                
         <!-- BLUES -->
+        <song name="12 Bar Blues" key="F" genre="Blues">
+            |F|F|F|F7|
+            |Bb7|Bb7|F|F|
+            |C7|Bb7|F|F|
+        </song>
         
+        <song name="12 Bar Blues" key="F" genre="Blues">
+            |F|F|F|F7|
+            |Bb7|Bb7|F|F|
+            |C7|Bb7|F|F|
+        </song>
+        
+        <song name="12 Bar Minor Blues" key="F" genre="Blues">
+            |Fm6|Bbm6|Fm6|F7|
+            |Bbm6|Bbm6|Fm6|Fm6|
+            |G7#5b9|C7#5b9|Fm6|Fm6|
+        </song>
+        
+        <song name="8 Bar Blues" key="F" genre="Blues">
+            |F|Bb7|F|D7|
+            |Gm7|C7|F|F|
+        </song>
+               
 		<!-- OTHER -->
 	    <song name="Pimba" genre="Pimba" measure="4/4" key="C">
 			|C|G|C|G|
