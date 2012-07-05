@@ -72,7 +72,6 @@ public class Api implements MetaEventListener {
 			receiver = midiDevice.getReceiver();
 			sequencer = MidiSystem.getSequencer();
 			sequence = new Sequence(Sequence.PPQ, DEFAULT_PPQ_TICKS);
-			//			sequence = new Sequence(Sequence.PPQ, )
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -84,7 +83,7 @@ public class Api implements MetaEventListener {
 		markovs = new HashMap<String, Markov>();
 
 		key = DEFAULT_KEY;
-		
+
 		bpm = DEFAULT_BPM;
 
 		openMidiDevice();
@@ -136,7 +135,26 @@ public class Api implements MetaEventListener {
 				int type = Integer.parseInt(elem.getAttribute("type"));
 				String name = elem.getAttribute("name");
 				String def = elem.getTextContent();
-				patterns.add(new Pattern(type, name, def));
+
+				if (def.contains(CHORDS_DELIMITER)) {
+
+					String lines[] = def.split("\n");
+					for (int j = 0; j < lines.length; j++) {					
+						String line = lines[j];					
+						int idx = line.indexOf(CHORDS_DELIMITER);
+						if (idx != -1) {
+							line = line.substring(idx+1, line.lastIndexOf(CHORDS_DELIMITER)-1);
+							//						System.out.println(line);
+							lines[j] = line;
+						}				
+					}
+
+					patterns.add(new Pattern(type, name, lines));
+				}
+
+				else {
+					patterns.add(new Pattern(type, name, def));
+				}
 			}
 
 			// parsing songs
@@ -247,6 +265,7 @@ public class Api implements MetaEventListener {
 		return null;
 	}
 
+	//TODO missing comment here
 	public void meta(MetaMessage meta) {
 		if (meta.getType() == 47) {
 			sequencer.close();
@@ -271,7 +290,7 @@ public class Api implements MetaEventListener {
 		}
 
 		Track track = sequence.createTrack();
-		this.progression.generate(track);
+		progression.generate(track);
 
 		try {
 			sequencer.open();
@@ -384,13 +403,13 @@ public class Api implements MetaEventListener {
 
 		try {
 			sequence = new Sequence(Sequence.PPQ, DEFAULT_PPQ_TICKS);
-		} catch (InvalidMidiDataException e1) {
-			e1.printStackTrace();
+		} catch (InvalidMidiDataException e) {
+			e.printStackTrace();
 		}
 
 		Track track = sequence.createTrack();		
 		Progression.generateCountIn(track);
-		
+
 		try {
 			sequencer.open();
 			sequencer.setSequence(sequence);

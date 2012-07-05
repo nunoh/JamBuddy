@@ -37,6 +37,7 @@ public class Note implements Comparable<Note> {
 		this(Note.getMidiValue(note), Api.DEFAULT_NOTE_VELOCITY);
 	}
 
+	//TODO dafuq
 	public String toString() {
 		if (toStringMode == ToStringMode.LETTER)
 			return getLetter(this.pitch);
@@ -128,17 +129,6 @@ public class Note implements Comparable<Note> {
 		else return 1;
 	}
 
-	//	public void play() {		
-	//				
-	//		Api.getReceiver().send(getMidiMessage(), -1);
-	//		
-	//		try {
-	//			Thread.sleep(this.duration*1000);
-	//		} catch (InterruptedException e) {
-	//			e.printStackTrace();
-	//		}
-	//	}
-
 	public ShortMessage getNoteOnMessage() {
 		ShortMessage ret = new ShortMessage();
 		try {
@@ -160,23 +150,24 @@ public class Note implements Comparable<Note> {
 	}
 
 	//TODO remove 4 magic number
-	public void put(Track track, int bar, int tempo) {
+	public void put(Track track, int bar, int quarter) {
 		bar = bar - 1;
-		tempo = tempo - 1;
-		MidiEvent eventOn = new MidiEvent(getNoteOnMessage(), bar*4 + tempo);
-		MidiEvent eventOff = new MidiEvent(getNoteOffMessage(), bar*4 + tempo + duration);		
+		quarter = quarter - 1;
+		MidiEvent eventOn = new MidiEvent(getNoteOnMessage(), bar*4 + quarter*Api.DEFAULT_PPQ_TICKS);
+		MidiEvent eventOff = new MidiEvent(getNoteOffMessage(), bar*4 + quarter*Api.DEFAULT_PPQ_TICKS + duration);		
 		track.add(eventOn);
 		track.add(eventOff);
 	}
 	
-//	public void put(Track track, int bar, int tempo, int quarter) {
-//		bar = bar - 1;
-//		tempo = tempo - 1;
-//		MidiEvent eventOn = new MidiEvent(getNoteOnMessage(), bar*4 + tempo + quarter);
-//		MidiEvent eventOff = new MidiEvent(getNoteOffMessage(), bar*4 + tempo + quarter + duration);		
-//		track.add(eventOn);
-//		track.add(eventOff);
-//	}
+	public void put(Track track, int bar, int quarter, int half) {
+		bar = bar - 1;
+		quarter = quarter - 1;
+		half = half - 1;
+		MidiEvent eventOn = new MidiEvent(getNoteOnMessage(), bar*4 + quarter*Api.DEFAULT_PPQ_TICKS + half);
+		MidiEvent eventOff = new MidiEvent(getNoteOffMessage(), bar*4 + quarter*Api.DEFAULT_PPQ_TICKS + half + duration);		
+		track.add(eventOn);
+		track.add(eventOff);
+	}
 
 	public int getFunction(String key) {
 		int iKey = Note.getMidiValue(key) - 60; //TODO

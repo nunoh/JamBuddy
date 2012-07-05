@@ -1,5 +1,7 @@
 package pt.santos.nuno;
 
+import java.util.ArrayList;
+
 /*
  * A chord inside a progression has both a number of bars and a pattern associated
  */
@@ -20,7 +22,7 @@ public class ChordProg extends Chord {
 		return super.toString() + " x " + bars;
 	}
 	
-	public int getPattern(int i) {
+	public int getPatternNote(int i) {
 		char c = Api.pattern.getDef().charAt(i);
 		int ret;
 		if (c == Pattern.REST)
@@ -28,6 +30,21 @@ public class ChordProg extends Chord {
 		else
 			ret = Integer.parseInt(""+c);
 		return ret;
+	}
+	
+	// return an array with the notes of the pattern vertically (same beat)
+	public ArrayList<Integer> getPatternNotes(int i) {
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		String[] lines = Api.pattern.getLines();
+		for (String s : lines) {
+			char c = s.charAt(i);
+			ret.add(Integer.parseInt(""+c));
+		}
+		return ret;		
+	}
+	
+	public Pattern getPattern() {
+		return Api.pattern;
 	}
 
 }

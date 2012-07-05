@@ -8,56 +8,52 @@ import javax.sound.midi.Track;
 
 import org.w3c.dom.Element;
 
-/*
- * A progression has many chordprogs (with a number of bars and pattern)
- * and 
- */
 public class Progression implements Iterable<ChordProg> {
-	
+
 	private ArrayList<ChordProg> chords;
 	private int bpm;
 	private int bar = 0; // the ongoin bar during generation
-	
+
 	private boolean sameBar = false;
-	
+
 	public Progression() {
 		chords = new ArrayList<ChordProg>();
 	}
-	
+
 	public Progression(String[] progression) {
-		
+
 		chords = new ArrayList<ChordProg>();
-		
+
 		for (int i = 0; i < progression.length; i++) {
 			handleProgressionLine(progression[i]);
 		}			
-		
-//		System.out.println("progression is " + chords.toString());
+
+		//		System.out.println("progression is " + chords.toString());
 	}
-	
+
 	//TODO change chord duration from 2 and 4 constants
 	private void handleProgressionLine(String progression) {
 		String tokens[] = progression.split("\\" + Api.CHORDS_DELIMITER);
 		for (int i = 1; i < tokens.length; i++) {
-			
+
 			String token = tokens[i].trim();
-			
+
 			if (token.equals(Api.CHORD_PREVIOUS_SYMBOL)) {
 				token = tokens[i-1];
 			}
-						
+
 			//TODO better support for two chords in a bar
 			if (token.contains(" ")) {
-//				String chords12[] = token.split(" ");
-//				String chord1 = chords12[0];
-//				String chord2 = chords12[1];
-//				chords.add(new ChordProg(new Chord(chord1), 2));
-//				chords.add(new ChordProg(new Chord(chord2), 2));
+				//				String chords12[] = token.split(" ");
+				//				String chord1 = chords12[0];
+				//				String chord2 = chords12[1];
+				//				chords.add(new ChordProg(new Chord(chord1), 2));
+				//				chords.add(new ChordProg(new Chord(chord2), 2));
 			}
 
 			else { 
 				try {
-				chords.add(new ChordProg(new Chord(token), 4));
+					chords.add(new ChordProg(new Chord(token), 4));
 				}
 				catch (Exception e) {
 					System.err.println("erro ao criar acorde '" + token + "'");
@@ -65,15 +61,15 @@ public class Progression implements Iterable<ChordProg> {
 			}
 		}
 	}
-	
+
 	public Progression(ArrayList<ChordProg> chords) {
 		this.chords = chords; 
 	}
-	
+
 	public void addChord(Chord chord, int bars) {
 		chords.add(new ChordProg(chord, bars));
 	}
-	
+
 	public void addChord(Chord chord) {
 		chords.add(new ChordProg(chord, 4));
 	}
@@ -88,12 +84,20 @@ public class Progression implements Iterable<ChordProg> {
 				voiceLeading(chords.get(i-1), chords.get(i));
 				playPattern(chords.get(i), track);
 			}
-			
+
 		}
 	}
-	
+
 	public static void generateCountIn(Track track) {
-		Note c3 = new Note(60, 100, 1);
+		Note c3 = new Note(80, 10, 2);
+
+		//		c3.put(track, 1, 1, 1);
+		//		c3.put(track, 1, 2, 1);		
+		//		c3.put(track, 1, 3, 1);
+		//		c3.put(track, 1, 3, 2);
+		//		c3.put(track, 1, 4, 1);
+		//		c3.put(track, 1, 4, 2);
+
 		c3.put(track, 1, 1);
 		c3.put(track, 1, 2);
 		c3.put(track, 1, 3);
@@ -101,13 +105,13 @@ public class Progression implements Iterable<ChordProg> {
 	}
 
 	private void voiceLeading(ChordProg c1, ChordProg c2) {
-				
+
 		// the resulting voicing of the chord
 		List<Note> ret = new ArrayList<Note>();
-		
+
 		// notes of the second chord that aren't in the first one
 		List<Note> difs = new ArrayList<Note>();
-		
+
 		for (Note n1 : c1) {
 			for (Note n2 : c2) {
 				// maitain the common notes (using pitch class to compare)
@@ -117,7 +121,7 @@ public class Progression implements Iterable<ChordProg> {
 					difs.add(n2);
 			}
 		}
-		
+
 		// for each pitch class of the 2nd chord that isn't in the 1st chord, 
 		// check which pitch of that pitch class note is nearest to any pitch 
 		// of the notes of the 1st chord
@@ -142,53 +146,70 @@ public class Progression implements Iterable<ChordProg> {
 			}
 			ret.add(new Note(opt));
 		}
-		
+
 		// sort array by pitch
 		Collections.sort(ret);
-		
+
 		c2.setNotes(ret);
-				
+
 	}
 
 	public int getBPM() {
 		return this.bpm;
 	}
-	
+
 	public void setBPM(int bpm) {
 		this.bpm = bpm;
 	}
-	
+
 	public void playPattern(ChordProg chord, Track track) {
-						
+
+		if (Api.pattern.isMultiLine()) {
+			playMultiLinePattern(chord, track);
+			return;
+		}
+
 		for (int i = 0; i < Api.pattern.getSize(); i++) {
-			int iNote = chord.getPattern(i);
+			int iNote = chord.getPatternNote(i);
 			if (iNote > chord.getNumNotes()) {
 				System.err.println("not playing note, because it doesn't fit in chord.");
 				continue;
 			}
-			
-			else if (i+1 > chord.getBeats()) {
-				System.err.println("not playing note, because it doesn't fit in bar.");
-				if (sameBar) { sameBar = false; bar++; }
-				else sameBar = true;
-				return;
-			}
+
 			else if (iNote == -1) {
 				// is a rest, do nothing
 			}
 			else {
-				Note n = chord.getNote(iNote-1);				
-				if (!sameBar) {
-					n.put(track, bar+1, i+1);
-				}
-				else { 
-					n.put(track, bar+1, i+1+2);
-				}
+				Note n = chord.getNote(iNote-1);					
+				n.put(track, bar+1, i+1);		
 			}
-		}
-		if (!sameBar) bar++;
+		} 
+		bar++;
 	}
-	
+
+	//TODO must refactor!
+	private void playMultiLinePattern(ChordProg chord, Track track) {
+		for (int i = 0; i < Api.pattern.getLines().length; i++) {
+			ArrayList<Integer> notes = chord.getPatternNotes(i);
+			for (int n = 0; n < notes.size(); n++) {
+				int iNote = notes.get(n);
+				if (iNote > chord.getNumNotes()) {
+					System.err.println("not playing note, because it doesn't fit in chord.");
+					continue;
+				}
+
+				else if (iNote == -1) {
+					// is a rest, do nothing
+				}
+				else {
+					Note note = chord.getNote(iNote-1);					
+					note.put(track, bar+1, i+1);		
+				}
+			} 
+			bar++; 
+		}
+	}
+
 	@Override
 	public String toString() {
 		String ret = "";
@@ -196,7 +217,7 @@ public class Progression implements Iterable<ChordProg> {
 			ret += chord + "\n";
 		return ret;
 	}
-	
+
 	public ArrayList<ChordProg> getChords() {
 		return chords;
 	}
@@ -204,5 +225,5 @@ public class Progression implements Iterable<ChordProg> {
 	public Iterator<ChordProg> iterator() {
 		return chords.iterator();
 	}
-		
+
 }

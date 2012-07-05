@@ -42,7 +42,7 @@ public class Chord implements Iterable<Note> {
 		this(parseChord(chord, "note"), parseChord(chord, "chord"));		
 	}
 		
-	//TODO add throw exception invalid chord
+	//TODO add throws exception invalid chord
 	private static String parseChord(String chord, String param) {
 		
 		String notes = "^([CDEFGAB])";

@@ -186,28 +186,36 @@ public class GUI implements WindowListener {
 					return;
 				}
 				
-				app.playCountIn();
-				System.out.println("returning");
-				return;
+//				app.playCountIn();
+//				return;
+				
+				// bpms
+				int bpm = (Integer) spnBPM.getValue();
+				app.setBPM(bpm);
+				
+//				float f = (float) (60.0 / bpm);
+//				float f2 = f*4*1000;
+//				int fi = (int)f2;
+//				try {
+//					Thread.sleep(fi);
+//				} catch (InterruptedException e1) {
+//					e1.printStackTrace();
+//				}
 
-//				// bpms
-//				int bpm = (Integer) spnBPM.getValue();
-//				app.setBPM(bpm);
-//
-//				buildProgression();
-//
-//				// loop count
-//				if (cbLoop.isSelected()) {
-//					app.sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-//				}
-//
-//				else {
-//					int iLoopCount = (Integer) spnLoopCount.getValue(); 
-//					app.sequencer.setLoopCount(iLoopCount);
-//				}
-//
-//				// actually play
-//				app.play();
+				buildProgression();
+
+				// loop count
+				if (cbLoop.isSelected()) {
+					app.sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+				}
+
+				else {
+					int iLoopCount = (Integer) spnLoopCount.getValue(); 
+					app.sequencer.setLoopCount(iLoopCount);
+				}
+
+				// actually play
+				app.play();
 			}
 		});
 	}
@@ -559,13 +567,6 @@ public class GUI implements WindowListener {
 		spnLoopCount = new JSpinner(sm);
 		spnLoopCount.setBounds(271, 117, 41, 20);
 		frame.getContentPane().add(spnLoopCount);
-		cbbPatterns.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JComboBox cb = (JComboBox)e.getSource();
-				String sPattern = (String)cb.getSelectedItem();
-				app.pattern = new Pattern(sPattern);
-			}		
-		});
 
 		cbLoop = new JCheckBox("Forever");
 		cbLoop.addActionListener(new ActionListener() {
@@ -584,6 +585,18 @@ public class GUI implements WindowListener {
 	private void buildPattern() {
 		cbbPatterns = new JComboBox(patterns);
 		cbbPatterns.setBounds(271, 93, 81, 18);
+		cbbPatterns.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JComboBox cb = (JComboBox)e.getSource();
+				String sPattern = (String)cb.getSelectedItem();			
+				Pattern p = Api.getPattern(sPattern);
+				if (p.isMultiLine()) {
+					Api.pattern = new Pattern(sPattern, true);
+				}
+				else
+					Api.pattern = new Pattern(sPattern);
+			}		
+		});
 		frame.getContentPane().add(cbbPatterns);
 	}
 	
