@@ -1,13 +1,13 @@
 TODO
 - key accidentals
-- carregar mais patterns
-- por 1o acorde em funcao da key
 - markov ordem 2 e 3
 - mostrar o acorde que está a ser tocado
 
 DONE
 - resolver bug bpm
 - carregar mais songs
+- por 1o acorde em funcao da key
+- carregar mais patterns
 
 KNOWN BUGS
 - % no inicio da linha nao funciona

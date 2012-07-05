@@ -12,7 +12,9 @@ public class Markov {
 		
 	private String inPrev;
 	private String outPrev;
+	@SuppressWarnings("unused")
 	private int order;
+	@SuppressWarnings("unused")
 	private int elements;	
 	private Random random;
 	
@@ -60,6 +62,7 @@ public class Markov {
 		
 		String ret;
 	
+		// se é o primeiro, retorna um random de todos os estados
 		if (outPrev == null) {
 			int r = random.nextInt(map.size());			
 			Object[] keys = map.keySet().toArray();
@@ -123,6 +126,45 @@ public class Markov {
 
 	public void setPrevious(String string) {
 		
+	}
+
+	public String getFirst(String genre, String major) {
+
+		String firstState = "(0,1)"; 
+		if (genre.equals("Jazz") && major.equals("Major")) {
+			Random random = new Random();
+			int n = random.nextInt(3);
+			if (n == 0) firstState = "(0,1)";
+			else if (n == 1) firstState = "(0,5)";
+			else firstState = "(2,6)";
+		}
+		
+		else if (genre.equals("Jazz") && major.equals("Minor")) {
+			Random random = new Random();
+			int n = random.nextInt(2);
+			if (n == 0) firstState = "(0,2)";
+			else firstState = "(0,6)";
+		}
+		
+		else if (genre.equals("Pimba")) {
+			firstState = "(0,1)";
+		}
+		
+		else if (genre.equals("Blues")) {
+			// dont know a rule for this
+		}
+		
+		else if (genre.equals("Bossa Nova") && major.equals("Major")){ // Bossa Nova
+			firstState = "(0,5)";
+		}
+		
+		else { // Bossa Nova Minor
+			firstState = "(2,6)"; 
+		}
+		
+		outPrev = firstState;
+//		System.out.println("returning " + outPrev);
+		return outPrev;
 	}
 	
 }

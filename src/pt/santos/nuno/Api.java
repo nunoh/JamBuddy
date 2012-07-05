@@ -4,18 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.sound.midi.Instrument;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaEventListener;
 import javax.sound.midi.MetaMessage;
-import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
-import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Track;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,12 +29,12 @@ import org.w3c.dom.NodeList;
 public class Api implements MetaEventListener {
 
 	// constants
-	public static final String PATH_XML_CONFIG = "src/config.xml";
+	public static final String PATH_XML_CONFIG = "config.xml";
 	public static final String CHORDS_DELIMITER = "|";	
 	public static final String CHORD_PREVIOUS_SYMBOL = "%";
 
 	// defaults
-	public static final int DEFAULT_NOTE_VELOCITY = 80;
+	public static final int DEFAULT_NOTE_VELOCITY = 60;
 	public static final int DEFAULT_MIDI_DEVICE = 2;
 	public static final int DEFAULT_PPQ_TICKS = 1;
 	public static final int DEFAULT_BPM = 120;
@@ -328,6 +325,7 @@ public class Api implements MetaEventListener {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public void setPattern(Pattern pattern) {
 		this.pattern = pattern;
 	}

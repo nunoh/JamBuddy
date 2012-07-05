@@ -1,9 +1,6 @@
 package pt.santos.nuno;
 
 import junit.framework.TestCase;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Test extends TestCase {
 	

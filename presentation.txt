@@ -10,4 +10,4 @@ LIMITATIONS
 - only one chord per bar
 - only one signature per bar
 - kind of limited in terms of modulation
-- can't change chords and patterns and basically any paramenter on the fly
+- can't change chords adnd patterns and basically any paramenter on the fly

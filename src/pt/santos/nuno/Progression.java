@@ -6,15 +6,13 @@ import java.util.List;
 
 import javax.sound.midi.Track;
 
-import org.w3c.dom.Element;
-
 public class Progression implements Iterable<ChordProg> {
 
 	private ArrayList<ChordProg> chords;
 	private int bpm;
 	private int bar = 0; // the ongoin bar during generation
 
-	private boolean sameBar = false;
+//	private boolean sameBar = false;
 
 	public Progression() {
 		chords = new ArrayList<ChordProg>();
@@ -163,6 +161,12 @@ public class Progression implements Iterable<ChordProg> {
 	}
 
 	public void playPattern(ChordProg chord, Track track) {
+		
+		int root = chord.getRoot();
+		System.out.println(root-24);
+		Note rootNote = new Note(root-24, 60, 4);
+		rootNote.put(track, bar+1, 1);
+
 
 		if (Api.pattern.isMultiLine()) {
 			playMultiLinePattern(chord, track);

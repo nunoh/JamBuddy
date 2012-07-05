@@ -38,7 +38,7 @@ import org.w3c.dom.NodeList;
 public class GUI implements WindowListener {
 
 	// constants
-	private static final String WINDOW_TITLE = "Jazz Markov Generator";
+	private static final String WINDOW_TITLE = "Backing Track Generator";
 	private static final int TABLE_ROW_HEIGHT = 40;
 	private static final String ICONS_FOLDER = 	"icons";
 	private static final int DEFAULT_TABLE_ROWS = 4;
@@ -68,6 +68,7 @@ public class GUI implements WindowListener {
 	private JComboBox cbbKeys;
 	private JComboBox cbbAccidentals;
 	private JCheckBox cbLoop;
+	private JComboBox cbbMajor; 
 	private JScrollPane scrollPane; 
 	private JFileChooser fileChooser;
 	private JTable table;
@@ -326,9 +327,25 @@ public class GUI implements WindowListener {
 				int rows = DEFAULT_TABLE_ROWS;
 				int cols = DEFAULT_TABLE_COLUMNS;
 				for (int i = 0; i < rows; i++) {
-					for (int j = 0; j < cols; j++) {	
+					for (int j = 0; j < cols; j++) {
+						
 //						System.out.println(app.markovs.get(genre).map);
-						String next = app.markovs.get(genre).getNext();
+						
+						String major = (String) cbbMajor.getSelectedItem();
+						String next;
+						if (i == 0 && j == 0) {
+							next = app.markovs.get(genre).getFirst(genre, major);							
+						}
+						else if (i == (DEFAULT_TABLE_COLUMNS-1) && j == (DEFAULT_TABLE_ROWS-1) ) {
+							if (major.equals("Major"))
+								next = "(0,1)";
+							else
+								next = "(0,2)";
+						}
+						else {
+							next = app.markovs.get(genre).getNext();
+						}
+												
 						Chord c = app.getMarkovChord(next);
 						int p = c.getRoot();
 						String let = Note.getLetter(p);
@@ -464,9 +481,20 @@ public class GUI implements WindowListener {
 		frame.getContentPane().add(lblLoop);
 		
 		JLabel lblGenre = new JLabel("Genre");
-		lblGenre.setHorizontalAlignment(SwingConstants.CENTER);
-		lblGenre.setBounds(397, 95, 67, 14);
+		lblGenre.setHorizontalAlignment(SwingConstants.LEFT);
+		lblGenre.setBounds(415, 95, 39, 14);
 		frame.getContentPane().add(lblGenre);
+		
+		//TODO major TODO
+		cbbMajor = new JComboBox(new String[]{"Major", "Minor"});
+		cbbMajor.setSelectedIndex(0);
+		cbbMajor.setBounds(464, 117, 75, 20);
+		frame.getContentPane().add(cbbMajor);
+		
+		JLabel lblMajmin = new JLabel("Maj/Min");
+		lblMajmin.setHorizontalAlignment(SwingConstants.LEFT);
+		lblMajmin.setBounds(408, 120, 46, 14);
+		frame.getContentPane().add(lblMajmin);
 
 	}
 

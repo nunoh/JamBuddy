@@ -1,6 +1,5 @@
 package pt.santos.nuno;
 
-import java.util.Iterator;
 
 public class Song  {
 
