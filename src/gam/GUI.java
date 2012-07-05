@@ -40,7 +40,7 @@ public class GUI implements WindowListener {
 	// constants
 	private static final String WINDOW_TITLE = "Backing Track Generator";
 	private static final int TABLE_ROW_HEIGHT = 40;
-	private static final String ICONS_FOLDER = 	"icons";
+	private static final String ICONS_FOLDER = 	"src/icons";
 	private static final int DEFAULT_TABLE_ROWS = 4;
 	private static final int DEFAULT_TABLE_COLUMNS = 4;
 

@@ -29,7 +29,7 @@ import org.w3c.dom.NodeList;
 public class Api implements MetaEventListener {
 
 	// constants
-	public static final String PATH_XML_CONFIG = "config.xml";
+	public static final String PATH_XML_CONFIG = "src/gam/config.xml";
 	public static final String CHORDS_DELIMITER = "|";	
 	public static final String CHORD_PREVIOUS_SYMBOL = "%";
 
