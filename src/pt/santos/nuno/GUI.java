@@ -584,7 +584,7 @@ public class GUI implements WindowListener {
 
 	private void buildPattern() {
 		cbbPatterns = new JComboBox(patterns);
-		cbbPatterns.setBounds(271, 93, 81, 18);
+		cbbPatterns.setBounds(271, 93, 123, 18);
 		cbbPatterns.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox)e.getSource();

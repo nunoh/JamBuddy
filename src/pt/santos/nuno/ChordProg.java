@@ -35,10 +35,13 @@ public class ChordProg extends Chord {
 	// return an array with the notes of the pattern vertically (same beat)
 	public ArrayList<Integer> getPatternNotes(int i) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
-		String[] lines = Api.pattern.getLines();
+		ArrayList<String> lines = Api.pattern.getLines();
 		for (String s : lines) {
 			char c = s.charAt(i);
-			ret.add(Integer.parseInt(""+c));
+			if (c == Pattern.REST)
+				ret.add(-1);
+			else
+				ret.add(Integer.parseInt(""+c));
 		}
 		return ret;		
 	}

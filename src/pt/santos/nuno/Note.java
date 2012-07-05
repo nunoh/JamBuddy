@@ -158,7 +158,7 @@ public class Note implements Comparable<Note> {
 		track.add(eventOn);
 		track.add(eventOff);
 	}
-	
+		
 	public void put(Track track, int bar, int quarter, int half) {
 		bar = bar - 1;
 		quarter = quarter - 1;

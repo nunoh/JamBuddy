@@ -187,9 +187,10 @@ public class Progression implements Iterable<ChordProg> {
 		bar++;
 	}
 
-	//TODO must refactor!
+	//TODO must refactor! this code is terrible
 	private void playMultiLinePattern(ChordProg chord, Track track) {
-		for (int i = 0; i < Api.pattern.getLines().length; i++) {
+//		for (int i = 0; i < chord.getPatternNotes(0).size(); i++) {
+		for (int i = 0; i < 3; i++) {
 			ArrayList<Integer> notes = chord.getPatternNotes(i);
 			for (int n = 0; n < notes.size(); n++) {
 				int iNote = notes.get(n);
@@ -199,15 +200,17 @@ public class Progression implements Iterable<ChordProg> {
 				}
 
 				else if (iNote == -1) {
-					// is a rest, do nothing
+					// if is a rest, do nothing
+//					Note ret = new Note(60, 0);
+//					ret.put(track, bar+1, i+1);
 				}
 				else {
 					Note note = chord.getNote(iNote-1);					
 					note.put(track, bar+1, i+1);		
 				}
-			} 
-			bar++; 
+			} 			 
 		}
+		bar++;
 	}
 
 	@Override

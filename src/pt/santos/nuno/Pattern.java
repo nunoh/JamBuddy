@@ -1,5 +1,7 @@
 package pt.santos.nuno;
 
+import java.util.ArrayList;
+
 
 public class Pattern {
 	
@@ -10,7 +12,7 @@ public class Pattern {
 	private int type;
 	private String name;
 	private String def;
-	private String[] lines;
+	private ArrayList<String> lines;
 	
 	public Pattern(int type, String name, String def) {
 		this.type = type;
@@ -22,7 +24,7 @@ public class Pattern {
 		this(Api.getPattern(name).getType(), name, Api.getPattern(name).getDef());		
 	}
 	
-	public Pattern(int type, String name, String[] lines) {
+	public Pattern(int type, String name, ArrayList<String> lines) {
 		this.type = type;
 		this.name = name;
 		this.lines = lines;
@@ -59,7 +61,7 @@ public class Pattern {
 		return this.lines != null;
 	}
 
-	public String[] getLines() {
+	public ArrayList<String> getLines() {
 		return lines;
 	}
 	

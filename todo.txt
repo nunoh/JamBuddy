@@ -16,6 +16,7 @@ KNOWN BUGS
 - in configuration file, the chord C-(maj7) is notated as C-maj7
 - gravar loop counts e etcs no ficheiro de gravacao
 - measure das musicas nao esta a ser considerado
+- rests (-) nos patterns no fim nao funcionam
 
 FUTURE WORK
 - corrigir known bugs

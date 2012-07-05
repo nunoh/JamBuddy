@@ -49,6 +49,7 @@ public class Api implements MetaEventListener {
 	private static ArrayList<Pattern> patterns;
 	private static ArrayList<Song> songs;
 
+	// something
 	public static Pattern pattern;
 
 	// public static 
@@ -139,17 +140,17 @@ public class Api implements MetaEventListener {
 				if (def.contains(CHORDS_DELIMITER)) {
 
 					String lines[] = def.split("\n");
+					ArrayList<String> linesF = new ArrayList<String>();
 					for (int j = 0; j < lines.length; j++) {					
 						String line = lines[j];					
 						int idx = line.indexOf(CHORDS_DELIMITER);
 						if (idx != -1) {
 							line = line.substring(idx+1, line.lastIndexOf(CHORDS_DELIMITER)-1);
-							//						System.out.println(line);
-							lines[j] = line;
+							linesF.add(line);
 						}				
 					}
 
-					patterns.add(new Pattern(type, name, lines));
+					patterns.add(new Pattern(type, name, linesF));
 				}
 
 				else {
