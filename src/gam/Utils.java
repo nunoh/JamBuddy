@@ -1,4 +1,4 @@
-package pt.santos.nuno;
+package gam;
 
 import java.io.BufferedReader;
 import java.io.File;

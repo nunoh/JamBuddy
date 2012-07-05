@@ -1,4 +1,4 @@
-package pt.santos.nuno;
+package gam;
 
 import junit.framework.TestCase;
 

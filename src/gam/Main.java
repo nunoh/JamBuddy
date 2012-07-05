@@ -1,4 +1,4 @@
-package pt.santos.nuno;
+package gam;
 
 
 public class Main {

@@ -1,4 +1,4 @@
-package pt.santos.nuno;
+package gam;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;

@@ -1,4 +1,4 @@
-package pt.santos.nuno;
+package gam;
 
 import java.awt.EventQueue;
 import java.awt.Font;
