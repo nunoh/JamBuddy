@@ -72,12 +72,12 @@ public class Note implements Comparable<Note> {
 		int offset;
 		
 		if (note.contains("C")) offset = 0;
-		else if (note.contains("D")) offset = 0;
-		else if (note.contains("E")) offset = 0;
-		else if (note.contains("F")) offset = 0;
-		else if (note.contains("G")) offset = 0;
-		else if (note.contains("A")) offset = 0;
-		else if (note.contains("B")) offset = 0;
+		else if (note.contains("D")) offset = 2;
+		else if (note.contains("E")) offset = 4;
+		else if (note.contains("F")) offset = 5;
+		else if (note.contains("G")) offset = 7;
+		else if (note.contains("A")) offset = 9;
+		else if (note.contains("B")) offset = 11;
 		else return -1;
 		
 		if (note.contains("##")) offset += 2;
@@ -159,6 +159,7 @@ public class Note implements Comparable<Note> {
 		return ret;
 	}
 
+	//TODO remove 4 magic number
 	public void put(Track track, int bar, int tempo) {
 		bar = bar - 1;
 		tempo = tempo - 1;
@@ -167,6 +168,15 @@ public class Note implements Comparable<Note> {
 		track.add(eventOn);
 		track.add(eventOff);
 	}
+	
+//	public void put(Track track, int bar, int tempo, int quarter) {
+//		bar = bar - 1;
+//		tempo = tempo - 1;
+//		MidiEvent eventOn = new MidiEvent(getNoteOnMessage(), bar*4 + tempo + quarter);
+//		MidiEvent eventOff = new MidiEvent(getNoteOffMessage(), bar*4 + tempo + quarter + duration);		
+//		track.add(eventOn);
+//		track.add(eventOff);
+//	}
 
 	public int getFunction(String key) {
 		int iKey = Note.getMidiValue(key) - 60; //TODO

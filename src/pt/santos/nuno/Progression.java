@@ -91,6 +91,14 @@ public class Progression implements Iterable<ChordProg> {
 			
 		}
 	}
+	
+	public static void generateCountIn(Track track) {
+		Note c3 = new Note(60, 100, 1);
+		c3.put(track, 1, 1);
+		c3.put(track, 1, 2);
+		c3.put(track, 1, 3);
+		c3.put(track, 1, 4);
+	}
 
 	private void voiceLeading(ChordProg c1, ChordProg c2) {
 				
@@ -139,16 +147,9 @@ public class Progression implements Iterable<ChordProg> {
 		Collections.sort(ret);
 		
 		c2.setNotes(ret);
-		
-//		System.out.println("ret : " + ret);		
+				
 	}
 
-//	public void setPattern(Pattern pattern) {
-//		for (ChordProg chord : chords) {
-//			chord.setPattern(pattern);
-//		}
-//	}
-	
 	public int getBPM() {
 		return this.bpm;
 	}
@@ -158,11 +159,7 @@ public class Progression implements Iterable<ChordProg> {
 	}
 	
 	public void playPattern(ChordProg chord, Track track) {
-				
-//		System.out.println(chord.getRoot() + " " + chord.getBeats());		
-		
-//		System.out.println(Api.pattern);
-		
+						
 		for (int i = 0; i < Api.pattern.getSize(); i++) {
 			int iNote = chord.getPattern(i);
 			if (iNote > chord.getNumNotes()) {

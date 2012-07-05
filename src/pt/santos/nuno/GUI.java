@@ -46,7 +46,7 @@ public class GUI implements WindowListener {
 
 	// string arrays
 	private final static String[] keys = { "C", "D", "E", "F", "G", "A", "B" };
-	private final static String[] accidentals = { "b", " ", "#" };	
+	private final static String[] accidentals = { "b", " ", "#" }; 
 
 	// button icons	
 	private final static String playIcon 		= ICONS_FOLDER + "\\play_small.png";
@@ -58,12 +58,13 @@ public class GUI implements WindowListener {
 	private final static String openIcon 		= ICONS_FOLDER + "\\open.png";
 	private final static String addIcon 		= ICONS_FOLDER + "\\add.png";
 	private final static String clearIcon 		= ICONS_FOLDER + "\\clear.png";
-	
+
 	// ui stuff 
 	private JFrame frame;
 	private JSpinner spnBPM;
 	private JSpinner spnLoopCount; 
 	private JComboBox cbbPatterns;
+	private JComboBox cbbGenres;
 	private JComboBox cbbKeys;
 	private JComboBox cbbAccidentals;
 	private JCheckBox cbLoop;
@@ -71,12 +72,13 @@ public class GUI implements WindowListener {
 	private JFileChooser fileChooser;
 	private JTable table;
 	private DefaultTableModel tableModel;
-	
+
 	// other
 	private static Api app;
 	private String patterns[];
 	private Progression prog;
-	private boolean paused = false;	
+	private boolean paused = false;
+	private static String genre = "Jazz";
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -109,15 +111,15 @@ public class GUI implements WindowListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		frame.setVisible(true);
+		frame.setVisible(true);		
 	}
 
 	private void initialize() {
 
 		build();
-		
+
 		buildFrame();
-				
+
 		buildPlay();
 		buildPause();
 		buildStop();
@@ -137,26 +139,30 @@ public class GUI implements WindowListener {
 
 		buildAdd();
 		buildClear();
-		
+
+		buildGenres();
+
 		buildLabels();
 
 	}
 
+
 	private void buildFrame() {
 		frame = new JFrame();
 		frame.setTitle(WINDOW_TITLE);
-		frame.setBounds(100, 100, 587, 480);
+		frame.setBounds(100, 100, 655, 490);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 	}
 
 	private void build() {
+		
 		patterns = new String[Api.getPatterns().size()];
 		for (int i = 0; i < Api.getPatterns().size(); i++) {
 			Pattern p = Api.getPatterns().get(i);
 			patterns[i] = p.getName();
-		}
-		
+		}			
+
 		fileChooser = new JFileChooser();
 	}
 
@@ -169,36 +175,45 @@ public class GUI implements WindowListener {
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				if (!containsChords()) {
+					JOptionPane.showMessageDialog(frame, "nothing to play...");
+					return;
+				}
+
 				if (paused) {
 					paused = false;
 					app.resume();					
 					return;
 				}
 				
-				// bpms
-				int bpm = (Integer) spnBPM.getValue();
-				app.setBPM(bpm);
-				
-				buildProgression();
+				app.playCountIn();
+				System.out.println("returning");
+				return;
 
-				// loop count
-				if (cbLoop.isSelected()) {
-					app.sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-				}
-
-				else {
-					int iLoopCount = (Integer) spnLoopCount.getValue(); 
-					app.sequencer.setLoopCount(iLoopCount);
-				}
-
-				// actually play
-				app.play();
+//				// bpms
+//				int bpm = (Integer) spnBPM.getValue();
+//				app.setBPM(bpm);
+//
+//				buildProgression();
+//
+//				// loop count
+//				if (cbLoop.isSelected()) {
+//					app.sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+//				}
+//
+//				else {
+//					int iLoopCount = (Integer) spnLoopCount.getValue(); 
+//					app.sequencer.setLoopCount(iLoopCount);
+//				}
+//
+//				// actually play
+//				app.play();
 			}
 		});
 	}
 
 	private void buildExport() {
-		
+
 		JButton btnExport = new JButton("");
 		btnExport.setIcon(new ImageIcon(exportIcon));
 		btnExport.addActionListener(new ActionListener() {
@@ -297,14 +312,15 @@ public class GUI implements WindowListener {
 
 		JButton btnGenerate = new JButton("");
 		btnGenerate.setIcon(new ImageIcon(generateIcon));
-		btnGenerate.setBounds(465, 11, 50, 50);
+		btnGenerate.setBounds(532, 11, 50, 50);
 		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int rows = DEFAULT_TABLE_ROWS;
 				int cols = DEFAULT_TABLE_COLUMNS;
 				for (int i = 0; i < rows; i++) {
-					for (int j = 0; j < cols; j++) {					
-						String next = app.markov.getNext();
+					for (int j = 0; j < cols; j++) {	
+//						System.out.println(app.markovs.get(genre).map);
+						String next = app.markovs.get(genre).getNext();
 						Chord c = app.getMarkovChord(next);
 						int p = c.getRoot();
 						String let = Note.getLetter(p);
@@ -340,8 +356,8 @@ public class GUI implements WindowListener {
 
 					NodeList songs = dom.getElementsByTagName("song");
 					Element elem = (Element) songs.item(0);
-//					String name = elem.getAttribute("name");				
-//					String key = elem.getAttribute("key");
+					//					String name = elem.getAttribute("name");				
+					//					String key = elem.getAttribute("key");
 					String sProg = elem.getTextContent();
 					sProg = sProg.substring(sProg.indexOf(Api.CHORDS_DELIMITER), sProg.lastIndexOf(Api.CHORDS_DELIMITER)+1);
 
@@ -390,7 +406,7 @@ public class GUI implements WindowListener {
 		JLabel lblGenerate = new JLabel("Generate");
 		lblGenerate.setFont(new Font("Tahoma", Font.BOLD, 10));
 		lblGenerate.setHorizontalAlignment(SwingConstants.CENTER);
-		lblGenerate.setBounds(469, 61, 46, 14);
+		lblGenerate.setBounds(534, 64, 46, 14);
 		frame.getContentPane().add(lblGenerate);
 
 		JLabel lblSave = new JLabel("Save");
@@ -418,7 +434,7 @@ public class GUI implements WindowListener {
 		JLabel lblPattern = new JLabel("Pattern");
 		lblPattern.setBounds(213, 95, 67, 14);
 		frame.getContentPane().add(lblPattern);
-		
+
 		JLabel lblAddBar = new JLabel("Add Bars");
 		lblAddBar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblAddBar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -430,15 +446,20 @@ public class GUI implements WindowListener {
 		lblClear.setHorizontalAlignment(SwingConstants.CENTER);
 		lblClear.setBounds(96, 417, 46, 14);
 		frame.getContentPane().add(lblClear);
-		
+
 		JLabel lblKey = new JLabel("Key");
 		lblKey.setBounds(50, 95, 32, 14);
 		frame.getContentPane().add(lblKey);
-		
+
 		JLabel lblLoop = new JLabel("Loop");
 		lblLoop.setBounds(213, 120, 67, 14);
 		frame.getContentPane().add(lblLoop);
 		
+		JLabel lblGenre = new JLabel("Genre");
+		lblGenre.setHorizontalAlignment(SwingConstants.CENTER);
+		lblGenre.setBounds(397, 95, 67, 14);
+		frame.getContentPane().add(lblGenre);
+
 	}
 
 	private void buildTable() {
@@ -451,7 +472,7 @@ public class GUI implements WindowListener {
 		table.setRowHeight(TABLE_ROW_HEIGHT);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(50, 160, 465, 214);
+		scrollPane.setBounds(50, 160, 532, 208);
 		scrollPane.setViewportView(table);
 		frame.getContentPane().add(scrollPane);	
 
@@ -513,7 +534,7 @@ public class GUI implements WindowListener {
 			}
 		});
 		cbbAccidentals.setSelectedIndex(1);
-		
+
 		cbbKeys.addActionListener(new ActionListener() {			
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox)e.getSource();
@@ -524,16 +545,16 @@ public class GUI implements WindowListener {
 		});
 
 	}
-	
+
 	private void buildBPM() {
-		SpinnerNumberModel sm = new SpinnerNumberModel(Api.DEFAULT_SEQUENCE_BPM, 20, 200, 1);
+		SpinnerNumberModel sm = new SpinnerNumberModel(Api.DEFAULT_BPM, 20, 200, 1);
 		spnBPM = new JSpinner(sm);
 		spnBPM.setBounds(103, 117, 46, 20);
 		frame.getContentPane().add(spnBPM);		
 	}
 
 	private void buildLoop() {
-		
+
 		SpinnerModel sm = new SpinnerNumberModel(0, 0, 99, 1);
 		spnLoopCount = new JSpinner(sm);
 		spnLoopCount.setBounds(271, 117, 41, 20);
@@ -557,15 +578,28 @@ public class GUI implements WindowListener {
 		});
 		cbLoop.setBounds(319, 116, 75, 23);
 		frame.getContentPane().add(cbLoop);
-		
+
 	}
-	
+
 	private void buildPattern() {
 		cbbPatterns = new JComboBox(patterns);
 		cbbPatterns.setBounds(271, 93, 81, 18);
 		frame.getContentPane().add(cbbPatterns);
 	}
 	
+	private void buildGenres() {
+		cbbGenres = new JComboBox(Api.getGenres().toArray());
+		cbbGenres.setBounds(464, 92, 115, 20);
+		cbbGenres.setSelectedIndex(0);
+		cbbGenres.addActionListener(new ActionListener() {		
+			public void actionPerformed(ActionEvent e) {
+				genre = (String) cbbGenres.getSelectedItem(); 
+			}
+		});
+		frame.getContentPane().add(cbbGenres);
+	}
+
+
 	public void buildProgression() {
 
 		prog = new Progression();	

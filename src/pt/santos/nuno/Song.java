@@ -27,5 +27,9 @@ public class Song  {
 	public String toString() {
 		return "song name:'" + name + "' genre:'" + genre + "' measure:'" + measure + "'\n" + sProgression;
 	}
+
+	public String getGenre() {
+		return genre;
+	}
 	
 }

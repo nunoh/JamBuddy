@@ -14,21 +14,24 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		Api app = new Api();
 		app.loadXML();
+//		app.loadSongs();
+//		System.out.println(app.markovs.get("Pimba").map);
+//		System.out.println(app.markovs.get("Jazz").map);
 		GUI gui = new GUI();
 		gui.start();
 	}
 		
-	public void markov() {
-
-		app = new Api();
-		app.loadXML();
-		app.loadSongs();
-		System.out.println(app.markov.map);		
-
-		for (int i = 0; i < 10; i++)
-			System.out.println(app.markov.getNext());
-
-	}
+//	public void markov() {
+//
+//		app = new Api();
+//		app.loadXML();
+//		app.loadSongs();
+//		System.out.println(app.markov.map);		
+//
+//		for (int i = 0; i < 10; i++)
+//			System.out.println(app.markov.getNext());
+//
+//	}
 
 	public void progression() {
 		app.openMidiDevice();

@@ -1,9 +1,7 @@
 TODO
 - key accidentals
-- definir ui final
 - carregar mais patterns
 - por 1o acorde em funcao da key
-- keyboard shortcuts
 - markov ordem 2 e 3
 - mostrar o acorde que está a ser tocado
 
@@ -16,6 +14,11 @@ KNOWN BUGS
 - % encadeados nao funciona (C7|%|%)
 - C7(b9) não sei se funciona. C7b9, funciona, mas o outro tambem nao devo erro a fazer parse
 - in configuration file, the chord C-(maj7) is notated as C-maj7
+- gravar loop counts e etcs no ficheiro de gravacao
+- measure das musicas nao esta a ser considerado
 
 FUTURE WORK
+- corrigir known bugs
+- melhorar ui
 - incorporar mais sistemas de notacao para ficheiro de configuracao (-7 E min7, por ex.)
+- keyboard shortcuts

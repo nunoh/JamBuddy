@@ -43,7 +43,11 @@
 	    <pattern type="2" name="Down">3211</pattern>
 	    <pattern type="2" name="Down">3211</pattern>
 	    <pattern type="2" name="Down">3211</pattern>
-	    <pattern type="2" name="Down">3211</pattern>
+<!-- 	    <pattern type="2" name="Compact3"> -->
+<!-- 	        |3    |3    |3    |3    | -->
+<!-- 	        |2    |2    |2    |2    | -->
+<!-- 	        |1    |1    |1    |1    | -->
+<!--         </pattern> -->
 	</patterns>
 	
 	<songs>
@@ -75,7 +79,7 @@
             |D-7|G7|C6|
         </song>
         
-        <song name="All the Things You Are" genre="Jazz" measure="4/4" key="F-">
+        <song name="All the Things You Are" genre="Jazz" measure="4/4" key="F">
             |F-7|Bb-7|Eb7|Abmaj7|
             |Dbmaj7|G7|Cmaj7|%|
             |C-7|F-7|Bb7|Ebmaj7|
@@ -87,7 +91,7 @@
             |Bb-7|Eb7|Abmaj7|G7 C7|F-|
         </song>
         
-        <song name="Autumn Leaves" genre="Jazz" measure="4/4" key="E-">
+        <song name="Autumn Leaves" genre="Jazz" measure="4/4" key="E">
             |A-7|D7|Gmaj7|
             |Cmaj7|F#-7b5|B7|E-|%|
             |A-7|D7|Gmaj7|
@@ -98,7 +102,7 @@
             |Cmaj7|B7b9|E-|%|
         </song>
         
-        <song name="Blue Bossa" genre="Jazz" measure="4/4" key="C-">
+        <song name="Blue Bossa" genre="Jazz" measure="4/4" key="C">
             |C-7|%|F-7|
             |F-7|D-7b5|G7|C-7|
             |F-7|Eb-7|Ab7|Dbmaj7|
@@ -117,7 +121,7 @@
 			|F-7 Bb7|A-7b5|D7|G-7 C7|F|
         </song>
               
-        <song name="Django" genre="Jazz" measure="4/4" key="F-">
+        <song name="Django" genre="Jazz" measure="4/4" key="F">
             |F-|Bb-6|C7|F-|
             |F7|Bb-7|Eb7|Abmaj7|
             |Dbmaj7|C7|G7|C7|
@@ -172,7 +176,7 @@
             |Ebmaj7 C-7|F-7 Bb7|Eb6|%|
         </song>
         
-        <song name="My Favorite Things" genre="Jazz" measure="4/4" key="E-">
+        <song name="My Favorite Things" genre="Jazz" measure="4/4" key="E">
             |E-7|F#-7|E-7|F#-7|Cmaj7|
             |Cmaj7|Cmaj7|%|A-7|D7|
             |Gmaj7|Cmaj7|Gmaj7|Cmaj7|F#-7b5 B7|
@@ -188,7 +192,7 @@
             |E-7|E-7|
         </song>
         
-        <song name="My Funny Valentine" genre="Jazz" measure="4/4" key="F-">
+        <song name="My Funny Valentine" genre="Jazz" measure="4/4" key="Eb">
             |C-|C-maj7|C-7|C-6|
             |Abmaj7|F-7|D-7b5|G7b9|
             |C-|C-maj7|C-7|C-6|
@@ -282,7 +286,7 @@
             |Eb7|%|A-7|D7b9|
             |G-7|C7b9|Fmaj7|%|
             |G7|%|G-7|Gb7|
-            |Fmaj7|Gb7|
+            |Fmaj7|
         </song>
         
 		<song name="One Note Samba" genre="Bossa Nova" measure="4/4" key="Bb">
@@ -297,25 +301,25 @@
         </song>
                 
         <!-- BLUES -->
-        <song name="12 Bar Blues" key="F" genre="Blues">
+        <song name="12 Bar Blues" genre="Blues" key="F">
             |F|F|F|F7|
             |Bb7|Bb7|F|F|
             |C7|Bb7|F|F|
         </song>
         
-        <song name="12 Bar Blues" key="F" genre="Blues">
+        <song name="12 Bar Blues" genre="Blues" key="F">
             |F|F|F|F7|
             |Bb7|Bb7|F|F|
             |C7|Bb7|F|F|
         </song>
         
-        <song name="12 Bar Minor Blues" key="F" genre="Blues">
+        <song name="12 Bar Minor Blues" genre="Blues" key="F">
             |F-6|Bb-6|F-6|F7|
             |Bb-6|Bb-6|F-6|F-6|
             |G7#5b9|C7#5b9|F-6|F-6|
         </song>
         
-        <song name="8 Bar Blues" key="F" genre="Blues">
+        <song name="8 Bar Blues" genre="Blues" key="F">
             |F|Bb7|F|D7|
             |G-7|C7|F|F|
         </song>
@@ -324,7 +328,7 @@
 	    <song name="Pimba" genre="Pimba" measure="4/4" key="C">
 			|C|G|C|G|
 			|C|F|C|G|
-			|C G|C|C|
+			|C|G|C|C|
         </song>                
             
 	</songs>

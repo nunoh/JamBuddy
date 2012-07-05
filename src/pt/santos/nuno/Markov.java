@@ -17,7 +17,6 @@ public class Markov {
 	private Random random;
 	
 	HashMap<String, Integer> map;
-//	HashMap<String, Float> probs;
 		
 	public Markov(int order) {
 		
@@ -28,7 +27,6 @@ public class Markov {
 		
 		this.order = order;
 		map = new HashMap<String, Integer>();
-//		probs = new HashMap<String, Float>();
 		elements = 0;
 		random = new Random();		
 	}
@@ -57,17 +55,6 @@ public class Markov {
 		
 		inPrev = str;		
 	}
-	
-//	public void calculateProbs() {
-//		Iterator<Entry<String, Integer>> it = map.entrySet().iterator();
-//		while (it.hasNext()) {
-//			Entry<String, Integer> entry = (Entry<String, Integer>) it.next();
-//			String key = entry.getKey(); 
-//			int value = entry.getValue();
-//			Float prob = (float)value / elements;
-//			probs.put(key, prob);
-//		}
-//	}
 	
 	public String getNext() {
 		

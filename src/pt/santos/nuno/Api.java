@@ -2,21 +2,24 @@ package pt.santos.nuno;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import javax.sound.midi.Instrument;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaEventListener;
 import javax.sound.midi.MetaMessage;
+import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
+import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Track;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -37,7 +40,7 @@ public class Api implements MetaEventListener {
 	public static final int DEFAULT_NOTE_VELOCITY = 80;
 	public static final int DEFAULT_MIDI_DEVICE = 2;
 	public static final int DEFAULT_PPQ_TICKS = 1;
-	public static final int DEFAULT_SEQUENCE_BPM = 200;
+	public static final int DEFAULT_BPM = 120;
 	public static final int DEFAULT_KEY = 0; // C
 	public static final int DEFAULT_PATTERN = 0; // UP
 
@@ -45,7 +48,7 @@ public class Api implements MetaEventListener {
 	private static ArrayList<ChordDef> chords;
 	private static ArrayList<Pattern> patterns;
 	private static ArrayList<Song> songs;
-	
+
 	public static Pattern pattern;
 
 	// public static 
@@ -54,7 +57,7 @@ public class Api implements MetaEventListener {
 	public Sequencer sequencer;
 	public Sequence sequence;
 	public Track track;		
-	public Markov markov;
+	public HashMap<String, Markov> markovs;
 	public Progression progression;
 	public int bpm;
 	public int key;	
@@ -69,6 +72,7 @@ public class Api implements MetaEventListener {
 			receiver = midiDevice.getReceiver();
 			sequencer = MidiSystem.getSequencer();
 			sequence = new Sequence(Sequence.PPQ, DEFAULT_PPQ_TICKS);
+			//			sequence = new Sequence(Sequence.PPQ, )
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -77,9 +81,11 @@ public class Api implements MetaEventListener {
 		sequencer.addMetaEventListener(this);
 		track = sequence.createTrack();
 
-		markov = new Markov(1);
+		markovs = new HashMap<String, Markov>();
 
 		key = DEFAULT_KEY;
+		
+		bpm = DEFAULT_BPM;
 
 		openMidiDevice();
 	}
@@ -141,18 +147,18 @@ public class Api implements MetaEventListener {
 				String measure = elem.getAttribute("measure");
 				String key = elem.getAttribute("key");
 				String sProg = elem.getTextContent();
-				
+
 				String lines[] = sProg.split("\n");
 				for (int j = 0; j < lines.length; j++) {					
 					String line = lines[j];					
 					int idx = line.indexOf(CHORDS_DELIMITER);
 					if (idx != -1) {
 						line = line.substring(idx, line.lastIndexOf(CHORDS_DELIMITER)+1);
-//						System.out.println(line);
+						//						System.out.println(line);
 						lines[j] = line;
 					}				
 				}
-								
+
 				songs.add(new Song(name, genre, measure, key, lines));
 			}
 
@@ -173,7 +179,7 @@ public class Api implements MetaEventListener {
 		return patterns;
 	}
 
-	public ArrayList<Song> getSongs() {
+	public static ArrayList<Song> getSongs() {
 		return songs;
 	}
 
@@ -284,13 +290,20 @@ public class Api implements MetaEventListener {
 		sequencer.setTempoInBPM(bpm);
 	}
 
-	public void loadSongs() {				
+	public void loadSongs() {
+
+		// initialize markov chain
+		for (String genre : getGenres()) {
+			markovs.put(genre, new Markov(1));
+		}
+
 		for (Song song : songs) {										
 			for (ChordProg chord : song.progression) {
 				int function = chord.getNote(0).getFunction(song.getKey());
 				int type = chord.getType();			
-				String sNode = "(" + function + "," + type + ")";			
-				markov.add(sNode);
+				String sNode = "(" + function + "," + type + ")";
+				String genre = song.getGenre();
+				markovs.get(genre).add(sNode);
 			}
 		}
 	}
@@ -320,19 +333,19 @@ public class Api implements MetaEventListener {
 			DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
 			dbf.setIgnoringComments(true);
 			Document doc = documentBuilder.newDocument();
-			
+
 			Element rootElement = doc.createElement(root);
 			doc.appendChild(rootElement);
 
 			Element em = doc.createElement("song");
 			em.setAttribute("name", "pimba");
 			em.setAttribute("key", "F#");
-				
+
 			String data = "|";
 			for (int i = 0; i < chords.size(); i++) {
 				data += chords.get(i) + "|";
 			}
-				
+
 			em.appendChild(doc.createTextNode(data));
 			rootElement.appendChild(em); 
 
@@ -355,5 +368,40 @@ public class Api implements MetaEventListener {
 	public void pause() {
 		sequencer.stop();		
 	}
+
+	public static ArrayList<String> getGenres() {
+		ArrayList<String> ret = new ArrayList<String>();
+		for (int i = 0; i < songs.size(); i++) {
+			String genre = songs.get(i).getGenre();
+			if (!ret.contains(genre)) {
+				ret.add(genre);
+			}
+		}
+		return ret;
+	}
+
+	public void playCountIn() {
+
+		try {
+			sequence = new Sequence(Sequence.PPQ, DEFAULT_PPQ_TICKS);
+		} catch (InvalidMidiDataException e1) {
+			e1.printStackTrace();
+		}
+
+		Track track = sequence.createTrack();		
+		Progression.generateCountIn(track);
+		
+		try {
+			sequencer.open();
+			sequencer.setSequence(sequence);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		sequencer.setTempoInBPM(bpm);
+		sequencer.start(); 
+	}
+
 
 }

@@ -30,7 +30,7 @@ public class Test extends TestCase {
         assertEquals(Note.getMidiValue("A"), 69);
         assertEquals(Note.getMidiValue("A#"), 70);
         assertEquals(Note.getMidiValue("B"), 71);
-        assertEquals(Note.getMidiValue("B#"), 60);       
+        assertEquals(Note.getMidiValue("B#"), 72);       
 	
         // testing getLetter function
 		assertEquals("C", Note.getLetter(60));
