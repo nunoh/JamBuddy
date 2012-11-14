@@ -35,7 +35,7 @@ public class Api implements MetaEventListener {
 
 	// defaults
 	public static final int DEFAULT_NOTE_VELOCITY = 60;
-	public static final int DEFAULT_MIDI_DEVICE = 2;
+	public static final int DEFAULT_MIDI_DEVICE = 1;
 	public static final int DEFAULT_PPQ_TICKS = 1;
 	public static final int DEFAULT_BPM = 120;
 	public static final int DEFAULT_KEY = 0; // C

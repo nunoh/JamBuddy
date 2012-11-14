@@ -19,6 +19,7 @@ KNOWN BUGS
 - rests (-) nos patterns no fim nao funcionam
 
 FUTURE WORK
+- garantir que o codigo esta cross platform (por exemplo tive que mudar o folder separator quando compilei o projecto em linux)
 - corrigir known bugs
 - melhorar ui
 - incorporar mais sistemas de notacao para ficheiro de configuracao (-7 E min7, por ex.)

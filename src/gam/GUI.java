@@ -49,15 +49,15 @@ public class GUI implements WindowListener {
 	private final static String[] accidentals = { "b", " ", "#" }; 
 
 	// button icons	
-	private final static String playIcon 		= ICONS_FOLDER + "\\play_small.png";
-	private final static String pauseIcon 		= ICONS_FOLDER + "\\pause_small.png";
-	private final static String stopIcon 		= ICONS_FOLDER + "\\stop_small.png";
-	private final static String generateIcon 	= ICONS_FOLDER + "\\generate.png";
-	private final static String saveIcon 		= ICONS_FOLDER + "\\save.png";
-	private final static String exportIcon 		= ICONS_FOLDER + "\\export2.png";
-	private final static String openIcon 		= ICONS_FOLDER + "\\open.png";
-	private final static String addIcon 		= ICONS_FOLDER + "\\add.png";
-	private final static String clearIcon 		= ICONS_FOLDER + "\\clear.png";
+	private final static String playIcon 		= ICONS_FOLDER + "//play_small.png";
+	private final static String pauseIcon 	= ICONS_FOLDER + "//pause_small.png";
+	private final static String stopIcon 		= ICONS_FOLDER + "//stop_small.png";
+	private final static String generateIcon 	= ICONS_FOLDER + "//generate.png";
+	private final static String saveIcon 		= ICONS_FOLDER + "//save.png";
+	private final static String exportIcon 	= ICONS_FOLDER + "//export2.png";
+	private final static String openIcon 		= ICONS_FOLDER + "//open.png";
+	private final static String addIcon 		= ICONS_FOLDER + "//add.png";
+	private final static String clearIcon 	= ICONS_FOLDER + "//clear.png";
 
 	// ui stuff 
 	private JFrame frame;
@@ -517,6 +517,7 @@ public class GUI implements WindowListener {
 	private void buildAdd() {
 
 		JButton btnAdd = new JButton("");
+		System.out.println(new ImageIcon(addIcon));
 		btnAdd.setIcon(new ImageIcon(addIcon));
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
