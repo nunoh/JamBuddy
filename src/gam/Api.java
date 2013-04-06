@@ -29,17 +29,17 @@ import org.w3c.dom.NodeList;
 public class Api implements MetaEventListener {
 
 	// constants
-	public static final String PATH_XML_CONFIG = "src/gam/config.xml";
-	public static final String CHORDS_DELIMITER = "|";	
+	public static final String PATH_XML_CONFIG       = "src/gam/config.xml";
+	public static final String CHORDS_DELIMITER      = "|";	
 	public static final String CHORD_PREVIOUS_SYMBOL = "%";
 
 	// defaults
 	public static final int DEFAULT_NOTE_VELOCITY = 60;
-	public static final int DEFAULT_MIDI_DEVICE = 1;
-	public static final int DEFAULT_PPQ_TICKS = 1;
-	public static final int DEFAULT_BPM = 120;
-	public static final int DEFAULT_KEY = 0; // C
-	public static final int DEFAULT_PATTERN = 0; // UP
+	public static final int DEFAULT_MIDI_DEVICE   = 1;
+	public static final int DEFAULT_PPQ_TICKS     = 1;
+	public static final int DEFAULT_BPM           = 120;
+	public static final int DEFAULT_KEY           = 0; // C
+	public static final int DEFAULT_PATTERN       = 0; // UP
 
 	// private
 	private static ArrayList<ChordDef> chords;
