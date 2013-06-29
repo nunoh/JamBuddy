@@ -13,3 +13,4 @@ For more information please see the [presentation file](https://github.com/nunoh
 ### Screenshot
 
 <img src="https://raw.github.com/nunoh/JamBuddy/master/screen.png" width="500px"/>
+
