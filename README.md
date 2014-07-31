@@ -1,4 +1,4 @@
-### JamBuddy
+### Jam Buddy
 
 An Automatic Backing Track Generator using Markov Chains. Final project for Automatic Generation of Music class.
 
