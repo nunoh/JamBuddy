@@ -12,5 +12,7 @@ For more information please see the [presentation file](https://github.com/nunoh
 
 ### Screenshot
 
-<img src="https://raw.github.com/nunoh/JamBuddy/master/screen.png" width="500px"/>
+<div style="margin: 0 auto">
+    <img src="https://raw.github.com/nunoh/JamBuddy/master/screen.png" width="500px"/>
+</div>
 
